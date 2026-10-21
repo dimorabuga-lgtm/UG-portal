@@ -1,4 +1,4 @@
-import {configured, response, validSession} from '../server/auth.mjs';
+import {configured,configurationIssues,authDiagnostic,response,validSession} from '../server/auth.mjs';
 import {loginPage} from '../server/login-page.mjs';
 
 export async function onRequest(context) {
@@ -10,6 +10,7 @@ export async function onRequest(context) {
     return loginPage();
   }
   if (!configured(env)) {
+    authDiagnostic('AUTH_CONFIGURATION_INVALID',undefined,configurationIssues(env));
     if ((request.headers.get('Accept') || '').includes('text/html')) return response(null,303,{Location:'/login'});
     return response('Вхід тимчасово недоступний. Спробуйте пізніше.',503);
   }

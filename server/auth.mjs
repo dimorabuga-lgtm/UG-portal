@@ -1,9 +1,19 @@
 export const TTL = 12 * 60 * 60;
 export const COOKIE = 'ug_portal_session';
 const encoder = new TextEncoder();
+export function configurationIssues(env) {
+  const issues=[];
+  if(typeof env?.PORTAL_PASSWORD!=='string'||!env.PORTAL_PASSWORD.length)issues.push('PORTAL_PASSWORD_MISSING');
+  if(typeof env?.SESSION_SECRET!=='string'||!env.SESSION_SECRET.length)issues.push('SESSION_SECRET_MISSING');
+  else if(env.SESSION_SECRET.length<32)issues.push('SESSION_SECRET_TOO_SHORT');
+  return issues;
+}
 export function configured(env) {
-  return typeof env.PORTAL_PASSWORD === 'string' && env.PORTAL_PASSWORD.length > 0 &&
-    typeof env.SESSION_SECRET === 'string' && env.SESSION_SECRET.length >= 32;
+  return configurationIssues(env).length === 0;
+}
+export function authDiagnostic(code, requestId = crypto.randomUUID(), issues = []) {
+  // Only static diagnostic codes: never pass Error objects, requests, cookies or env values here.
+  console.error(JSON.stringify({event:'portal_auth_failure',code,requestId,...(issues.length?{issues}:{})}));
 }
 export function response(body, status = 200, headers = {}) {
   return new Response(body, {status, headers: {'Cache-Control':'no-store, private', 'X-Content-Type-Options':'nosniff', 'Referrer-Policy':'same-origin', ...headers}});
@@ -47,7 +57,7 @@ export async function validSession(request, env, now = Math.floor(Date.now()/100
   try {
     const session = await env.AUTH_RATE_LIMIT.prepare('SELECT expires FROM auth_sessions WHERE id = ?1').bind(token.nonce).first();
     return Boolean(session && session.expires > now && session.expires === token.expiry);
-  } catch { return false; }
+  } catch { authDiagnostic('SESSION_LOOKUP_FAILED'); return false; }
 }
 export async function revokeSession(request,env) {
   const token = await verifiedToken(request,env);

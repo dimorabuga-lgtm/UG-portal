@@ -11,6 +11,9 @@ import {onRequest as logout} from './functions/api/logout.js';
 import {createSession,TTL,COOKIE,validSession,allowAttempt} from './server/auth.mjs';
 
 const root=path.dirname(fileURLToPath(import.meta.url));
+const diagnosticLogs=[];
+const savedConsoleError=console.error;
+console.error=value=>diagnosticLogs.push(String(value));
 const db=new DatabaseSync(':memory:');
 db.exec(await readFile(path.join(root,'migrations/0001_auth_rate_limit.sql'),'utf8'));
 const env={
@@ -50,6 +53,13 @@ assert.equal((await dispatch(new Request(origin+'/js/portal-links.js'),{})).stat
 assert.equal((await dispatch(post('wrong'))).status,401);
 assert.equal((await dispatch(post(env.PORTAL_PASSWORD),{})).status,503);
 assert.equal((await dispatch(post(env.PORTAL_PASSWORD),{...env,AUTH_RATE_LIMIT:undefined})).status,503);
+assert.equal((await dispatch(post(env.PORTAL_PASSWORD),{...env,PORTAL_PASSWORD:undefined})).status,503);
+assert.equal((await dispatch(post(env.PORTAL_PASSWORD),{...env,SESSION_SECRET:undefined})).status,503);
+assert.equal((await dispatch(post(env.PORTAL_PASSWORD),{...env,SESSION_SECRET:'short'})).status,503);
+const failingD1={...env,AUTH_RATE_LIMIT:{prepare(){throw Error('Private SQL error details');}}};
+assert.equal((await dispatch(post(env.PORTAL_PASSWORD),failingD1)).status,503);
+const failingSessionD1={...env,AUTH_RATE_LIMIT:{prepare(sql){if(sql.includes('INSERT INTO auth_sessions'))throw Error('Private insert error');return env.AUTH_RATE_LIMIT.prepare(sql);}}};
+assert.equal((await dispatch(post(env.PORTAL_PASSWORD),failingSessionD1)).status,503);
 assert.equal((await dispatch(new Request(origin+'/api/login',{method:'POST',headers:{Origin:'https://other.test'}}))).status,403);
 assert.equal((await dispatch(new Request(origin+'/api/login'))).status,405);
 assert.equal((await dispatch(new Request(origin+'/api/logout'))).status,405);
@@ -60,6 +70,7 @@ for(const path of ['/login','/api/login','/api/logout']){
 const success=await dispatch(post(env.PORTAL_PASSWORD));assert.equal(success.status,200);
 const cookie=success.headers.get('Set-Cookie');for(const part of ['HttpOnly','Secure','SameSite=Lax','Path=/','Max-Age=43200'])assert(cookie.includes(part));
 const header=cookie.split(';')[0];
+assert.match(success.headers.get('X-Request-ID'),/^[a-f0-9-]{36}$/);
 for(const url of ['/','/index.html','/js/portal-links.js','/js/app.js','/css/styles.css','/assets/ug.svg']){
   const result=await dispatch(new Request(origin+url,{headers:{Cookie:header}}));assert.equal(result.status,200,url);assert(result.headers.get('Cache-Control').includes('no-store'));
 }
@@ -100,6 +111,12 @@ if(process.argv[2]){
     assert.equal(await evaluate('location.pathname'),'/login');
     for(const width of [1440,1280,768,430,390,375,360]){await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});assert(await evaluate('document.documentElement.scrollWidth<=innerWidth'));}
     await evaluate(`document.querySelector('#toggle').click()`);assert.equal(await evaluate(`document.querySelector('#password').type`),'text');
+    // A 200 HTML fallback or malformed JSON is not a successful server login.
+    for(const kind of ['html','invalid-json','not-ok']){
+      await evaluate(`window.qaFetch=window.fetch;window.fetch=async()=>new Response(${JSON.stringify(kind==='html'?'<html>Static fallback</html>':kind==='invalid-json'?'{broken':'{"ok":false}')},{status:200,headers:{'Content-Type':${JSON.stringify(kind==='html'?'text/html':'application/json')}}});document.querySelector('#password').value='test';document.querySelector('#login-form').requestSubmit()`);
+      await delay(40);assert.equal(await evaluate('location.pathname'),'/login');assert(await evaluate(`document.querySelector('#message').textContent.includes('Вхід тимчасово недоступний')`));
+      await evaluate(`window.fetch=window.qaFetch;delete window.qaFetch`);
+    }
     await evaluate(`window.qaFetch=window.fetch;window.fetch=(...args)=>new Promise(resolve=>setTimeout(()=>resolve(window.qaFetch(...args)),120));document.querySelector('#password').value='wrong';document.querySelector('#login-form').requestSubmit()`);
     assert(await evaluate(`document.querySelector('#submit').disabled&&document.querySelector('#login-form').getAttribute('aria-busy')==='true'&&getComputedStyle(document.querySelector('#submit'),'::before').content!=='none'`));
     await delay(350);assert(await evaluate(`document.querySelector('#message').textContent.includes('Неправильний пароль')`));
@@ -130,3 +147,10 @@ if(process.argv[2]){
   }finally{socket?.close();child.kill();await new Promise(resolve=>server.close(resolve));}
 }
 db.close();
+const parsedDiagnostics=diagnosticLogs.map(line=>JSON.parse(line));
+for(const code of ['AUTH_CONFIGURATION_INVALID','D1_BINDING_MISSING','RATE_LIMIT_CHECK_FAILED','SESSION_CREATE_FAILED','SESSION_REVOKE_FAILED','SESSION_LOOKUP_FAILED'])assert(parsedDiagnostics.some(entry=>entry.code===code),code);
+for(const issue of ['PORTAL_PASSWORD_MISSING','SESSION_SECRET_MISSING','SESSION_SECRET_TOO_SHORT'])assert(parsedDiagnostics.some(entry=>entry.issues?.includes(issue)),issue);
+for(const forbidden of [env.PORTAL_PASSWORD,env.SESSION_SECRET,header,expired,'Private SQL error details','Private insert error','Private internal diagnostic'])assert(!diagnosticLogs.join('\n').includes(forbidden),'Diagnostic log redaction failed');
+assert(parsedDiagnostics.every(entry=>Object.keys(entry).every(key=>['event','code','requestId','issues'].includes(key))));
+console.error=savedConsoleError;
+console.log('PASS: diagnostic codes distinguish configuration, D1 and session failures without logging secret values, cookies, tokens or exception details; form rejects non-JSON success responses.');
