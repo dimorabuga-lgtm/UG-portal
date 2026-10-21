@@ -58,7 +58,7 @@ node check-cloudflare.mjs
 
 ## Дії власника перед публікацією
 
-1. Вибрати окремий Pages-проєкт; корінь Git-проєкту — `ug-internal-portal`, команда збірки — `node build.cjs`, вихідний каталог — `dist`. `functions` залишається поряд із `dist` у корені проєкту.
+1. Вибрати окремий Pages-проєкт; для `dimorabuga-lgtm/UG-portal` Root directory порожній або `/` (файли вже в корені репозиторію), команда збірки — `node build.cjs`, вихідний каталог — `dist`. `functions` залишається поряд із `dist` у корені проєкту.
 2. Додати в Settings → Variables and Secrets два значення типу **Secret** для Production: `PORTAL_PASSWORD` і незалежний випадковий `SESSION_SECRET` (щонайменше 32 символи). Застосувати їх новим deployment. Для Preview налаштувати окремі секрети й binding, якщо Preview використовуватиметься.
 3. Створити D1, виконати `migrations/0001_auth_rate_limit.sql`, додати binding `AUTH_RATE_LIMIT`. Інструкція: [AUTH-SETUP.md](AUTH-SETUP.md).
 4. У Settings → Runtime вибрати **Fail closed** за наявності цього параметра; не дозволяти статичну видачу при вичерпанні Functions quota. Перевірити, що cache rules не ігнорують `no-store`. [Cloudflare routing](https://developers.cloudflare.com/pages/functions/routing/#fail-open--closed).

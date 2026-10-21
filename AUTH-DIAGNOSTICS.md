@@ -56,7 +56,7 @@ GET-запити до `https://ug-portal.pages.dev` під час цього а�
 1. У Workers & Pages → **ug-portal** → Settings → Variables and Secrets перевірити Production `PORTAL_PASSWORD` і незалежний випадковий `SESSION_SECRET` (не коротший за 32 символи), обидва як Secret. Значення не потрібно показувати іншим. Не створюйте пароль за замовчуванням у коді.
 2. Перевірити, що це **Production**, а не лише Preview. Якщо значення збережено після поточного deployment, застосувати їх новим deployment. Повторне збереження потрібне лише коли змінна відсутня/некоректна або немає впевненості, що зміна була застосована.
 3. У Settings → Bindings перевірити D1 `AUTH_RATE_LIMIT`, у прив'язаній базі — таблиці `login_attempts` та `auth_sessions` з `migrations/0001_auth_rate_limit.sql`.
-4. Звірити commit SHA поточного production deployment з потрібним GitHub commit. Локально віддалений GitHub та Cloudflare-акаунт недоступні, тому цей збіг не перевірено.
+4. Звірити commit SHA поточного production deployment з потрібним GitHub commit. GitHub перевірено в аудиті нижче; доступу до Cloudflare Dashboard немає, тому Production deployment SHA необхідно звірити власнику.
 5. Перевірити корінь проєкту, `node build.cjs`, output `dist`, папку `functions` у корені поряд із `dist`, `_routes.json` з `include:["/*"]`, `exclude:[]` та Fail closed. Не завантажувати лише статичні файли через Dashboard drag-and-drop. Деталі в [AUTH-SETUP.md](AUTH-SETUP.md).
 
 ## Перевірка після deployment
@@ -70,3 +70,22 @@ GET-запити до `https://ug-portal.pages.dev` під час цього а�
 Пройдено тести справжніх серверних обробників та браузера: правильний/неправильний пароль, кожна конфігураційна відмова, відсутній/пошкоджений D1, сесія, змінений і прострочений токен, відкликання, захист файлів, CSRF, атрибути cookie, no-store, ліміт спроб. Тести підтвердили, що нові логи не містять тестових секретів, cookie, токенів або приватного тексту винятків. Окремо перевірено відмову форми від HTML 200, некоректного JSON та `{ok:false}`.
 
 Пройдено локальний Wrangler/workerd із D1: маршрути, статичні файли, вхід/вихід та відкликання. Це не перевірка production-логіну й не зміна production-конфігурації.
+
+## Зіставлення з GitHub при ручному завантаженні
+
+Перевірено публічний репозиторій dimorabuga-lgtm/UG-portal:
+
+- Поточний main на момент аудиту: 9c0f418542c7efca3932cc08a4b89d48facbf4a6 (Add files via upload).
+- Усі порівняні файли авторизації, index.html, build.cjs, міграція та routes збіглися з локальними після нормалізації CRLF/LF.
+- Production /login після нормалізації випадкового CSP nonce **точно збігся** з HTML, який генерує server/login-page.mjs попереднього commit cfda60ba33dda38f1637a5d5626de49d50e89636.
+- Production не має перевірки payload?.ok===true у формі, а GET /api/login не має X-Request-ID. У поточному main обидва виправлення є.
+
+Це доводить, що сайт обслуговує старішу версію цих компонентів, а не поточний main. Це не є доступом до deployment metadata: точний Production SHA, стан останньої збірки та її причину відмови потрібно прочитати в Dashboard.
+
+Окремо production GET /js/portal-links.js без cookie досі повертає 503, а не 401. У перевірених старому та новому middleware такий текст повертається лише в гілці !configured(env). Отже, спостереження відповідає невалідній конфігурації секретів; конкретне поле без logs/налаштувань визначити не можна. Застарілий deployment — підтверджена окрема проблема; не слід стверджувати, що одне оновлення коду автоматично виправить runtime secrets.
+
+В інструкції виправлено Root directory: у цьому GitHub файли лежать у корені, тому потрібно залишити поле порожнім або /. Значення ug-internal-portal стосується локальної папки, а не структури репозиторію. Чи було хибне значення фактично встановлене в Pages, без Dashboard невідомо.
+
+Повторні локальні тести коду, який збігся з main: build/release, server handlers, Chrome та Wrangler/workerd/D1 — пройдено. Перевірені правильний і неправильний пароль, відсутні/короткі secrets, D1 failure, HMAC, expiry, logout, прямі URL, cookie, формат JSON та редагування логів без витоку даних. Production login із правильним паролем не виконувався.
+
+Точний список файлів для ручного завантаження та порядок deployment — GITHUB-UPLOAD.md.

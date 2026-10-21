@@ -38,7 +38,7 @@ node check-auth.mjs "C:/Program Files/Google/Chrome/Application/chrome.exe"
 
 `dist` містить лише HTML, JS, CSS, зображення й `_routes.json`. Серверні файли, міграції, README, тести та секрети туди не копіюються. `_routes.json` має `include: ["/*"]` і порожній `exclude`: жоден файл порталу не обходить middleware.
 
-Для Git-інтеграції Pages задайте корінь проєкту `ug-internal-portal`, build command `node build.cjs`, output directory `dist`. Папка `functions` має залишатися в корені цього проєкту, поряд із `dist`. Оригінальні сайти не підключайте до цієї конфігурації.
+Для репозиторію `dimorabuga-lgtm/UG-portal` файли `index.html`, `build.cjs`, `functions/` і `server/` розміщені безпосередньо в корені GitHub. У Pages залиште Root directory порожнім (корінь `/`), Build command — `node build.cjs`, Build output directory — `dist`, Production branch — `main`. Локальна назва папки `ug-internal-portal` не є підпапкою цього репозиторію. Папка `functions` має залишатися поряд із `dist` у корені репозиторію.
 
 Для CLI можна скопіювати `wrangler.example.toml` у `wrangler.toml`, вказати свої назву проєкту та справжній database_id. Секретів у цьому файлі бути не повинно. Після окремого дозволу на публікацію використовуйте `npx wrangler pages deploy dist --project-name YOUR_PAGES_PROJECT` з папки порталу.
 
