@@ -4,6 +4,7 @@
   const status=document.querySelector('#online-status');
   const count=document.querySelector('#online-count');
   const notice=document.querySelector('#online-name-notice');
+  const onlineMetric=document.querySelector('#stat-online');
   let running=false,timer;
   async function refresh() {
     if(running||document.hidden)return;
@@ -27,12 +28,16 @@
         item.append(avatar,name);list.append(item);
       });
       count.textContent=String(data.count);count.hidden=false;list.hidden=!data.people.length;
+      onlineMetric.textContent=String(data.count);
+      onlineMetric.setAttribute('aria-label',`Онлайн зараз: ${data.count}`);
       status.textContent=data.people.length?'':'Зараз нікого немає онлайн.';status.hidden=Boolean(data.people.length);
       notice.hidden=data.identified!==false;
       panel.dataset.state=data.people.length?'ready':'empty';
     }catch{
       // Do not retain stale names/counts as if the service were healthy.
       list.replaceChildren();list.hidden=true;count.hidden=true;notice.hidden=true;status.hidden=false;
+      onlineMetric.textContent='—';
+      onlineMetric.setAttribute('aria-label','Кількість онлайн тимчасово недоступна');
       status.textContent='Не вдалося оновити список команди. Спробуємо знову автоматично.';panel.dataset.state='error';
     }finally{
       clearTimeout(timeout);running=false;panel.setAttribute('aria-busy','false');

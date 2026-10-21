@@ -89,110 +89,63 @@ window.portalCatalog = {
       "buttonLabel": "Відкрити графік",
       "icon": "calendar",
       "category": "schedule",
+      "directResourceId": "operator-work-schedule",
       "accent": "#6bcafa",
-      "modalDescription": "Оберіть потрібну категорію розділу «Графік роботи».",
-      "sections": [
-        {
-          "id": "schedule-operator-schedule",
-          "title": "Графік роботи операторів",
-          "description": "Актуальні зміни та робочий час.",
-          "category": "schedule",
-          "icon": "calendar",
-          "accent": "#6bcafa",
-          "type": "documents",
-          "status": "available",
-          "resourceIds": [
-            "operator-work-schedule"
-          ]
-        },
-        {
-          "id": "schedule-days-off",
-          "title": "Розклад вихідних",
-          "description": "Інформація про вихідні та розподіл змін.",
-          "category": "schedule",
-          "icon": "calendar",
-          "accent": "#6bcafa",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "schedule-team-schedule",
-          "title": "Графік команди",
-          "description": "Загальний розклад роботи команди.",
-          "category": "schedule",
-          "icon": "users",
-          "accent": "#6bcafa",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        }
-      ]
+      "sections": []
+    },
+    {
+      "id": "makeup-schedule",
+      "title": "Графік відпрацювань",
+      "description": "Графік відпрацювань співробітників кол-центру.",
+      "buttonLabel": "Відкрити графік",
+      "icon": "calendar",
+      "category": "makeup-schedule",
+      "directResourceId": "operator-makeup-schedule",
+      "accent": "#70d3cf",
+      "sections": []
     },
     {
       "id": "operator-payments",
-      "title": "Розрахунок операторів",
-      "description": "Ставки, KPI, бонуси та приклади розрахунків.",
-      "buttonLabel": "Відкрити розрахунок",
+      "title": "Розрахунки",
+      "description": "Розрахунки менеджерів, Team Leader & HR та admin.",
+      "buttonLabel": "Відкрити розрахунки",
       "icon": "calculator",
       "category": "payroll",
       "accent": "#a4a2ff",
-      "modalDescription": "Оберіть потрібну категорію розділу «Розрахунок операторів».",
+      "modalDescription": "Оберіть таблицю розрахунків для відповідної команди.",
       "sections": [
         {
-          "id": "payroll-salary",
-          "title": "Розрахунок заробітної плати",
-          "description": "Порядок розрахунку заробітної плати.",
+          "id": "payroll-managers-section",
+          "title": "Розрахунок Менеджерів",
+          "description": "Таблиця розрахунків менеджерів.",
           "category": "payroll",
-          "icon": "calculator",
+          "icon": "users",
           "accent": "#a4a2ff",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
+          "type": "sheets",
+          "status": "available",
+          "resourceIds": ["payroll-managers"]
         },
         {
-          "id": "payroll-rates",
-          "title": "Ставки та бонуси",
-          "description": "Інформація про ставки та бонуси.",
+          "id": "payroll-team-leader-hr-section",
+          "title": "Розрахунок Team Leader & HR",
+          "description": "Таблиця розрахунків Team Leader та HR.",
           "category": "payroll",
-          "icon": "chart",
-          "accent": "#a4a2ff",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
+          "icon": "headset",
+          "accent": "#71cafa",
+          "type": "sheets",
+          "status": "available",
+          "resourceIds": ["payroll-team-leader-hr"]
         },
         {
-          "id": "payroll-kpi",
-          "title": "KPI операторів",
-          "description": "Показники ефективності операторів.",
+          "id": "payroll-admin-section",
+          "title": "Розрахунок admin",
+          "description": "Таблиця розрахунків admin.",
           "category": "payroll",
-          "icon": "chart",
-          "accent": "#a4a2ff",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "payroll-leads",
-          "title": "Розрахунок за кількістю лідів",
-          "description": "Правила розрахунку за опрацьованими лідами.",
-          "category": "payroll",
-          "icon": "calculator",
-          "accent": "#a4a2ff",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "payroll-examples",
-          "title": "Приклади розрахунків",
-          "description": "Приклади розрахунків виплат.",
-          "category": "payroll",
-          "icon": "check",
-          "accent": "#a4a2ff",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
+          "icon": "settings",
+          "accent": "#70d3cf",
+          "type": "sheets",
+          "status": "available",
+          "resourceIds": ["payroll-admin"]
         }
       ]
     },
@@ -236,70 +189,14 @@ window.portalCatalog = {
     },
     {
       "id": "responsibilities",
-      "title": "Посадові обов’язки",
-      "description": "Обов’язки співробітників компанії.",
-      "buttonLabel": "Переглянути",
-      "icon": "book",
+      "title": "Посадові обов’язки та розподіл зон відповідальності співробітників кол-центру",
+      "description": "Єдиний документ про обов’язки та відповідальність команди.",
+      "buttonLabel": "Відкрити документ",
+      "icon": "users",
       "category": "roles",
+      "directResourceId": "staff-responsibilities",
       "accent": "#d19bef",
-      "modalDescription": "Оберіть потрібну категорію розділу «Посадові обов’язки».",
-      "sections": [
-        {
-          "id": "roles-head",
-          "title": "Керівник контакт-центру",
-          "description": "Посадові обов’язки керівника контакт-центру.",
-          "category": "roles",
-          "icon": "headset",
-          "accent": "#d19bef",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "roles-admin",
-          "title": "Адміністратор",
-          "description": "Посадові обов’язки адміністратора.",
-          "category": "roles",
-          "icon": "settings",
-          "accent": "#d19bef",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "roles-leader",
-          "title": "Team Leader зміни",
-          "description": "Обов’язки Team Leader зміни.",
-          "category": "roles",
-          "icon": "users",
-          "accent": "#d19bef",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "roles-hr",
-          "title": "HR та стажування",
-          "description": "Обов’язки щодо роботи з персоналом та стажування.",
-          "category": "roles",
-          "icon": "cap",
-          "accent": "#d19bef",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        },
-        {
-          "id": "roles-other",
-          "title": "Інші посадові обов’язки",
-          "description": "Документи щодо інших посадових обов’язків.",
-          "category": "roles",
-          "icon": "book",
-          "accent": "#d19bef",
-          "type": "documents",
-          "status": "pending",
-          "resourceIds": []
-        }
-      ]
+      "sections": []
     },
     {
       "id": "instructions",
@@ -533,11 +430,12 @@ window.portalCatalog = {
   "quickAccess": [
     {
       "category": "schedule",
+      "resourceId": "operator-work-schedule",
       "title": "Графік роботи"
     },
     {
       "category": "payroll",
-      "title": "Розрахунок операторів"
+      "title": "Розрахунки"
     },
     {
       "category": "extra-shifts",
@@ -554,6 +452,15 @@ window.portalCatalog = {
     }
   ],
   "resources": [
+    {
+      "id": "operator-makeup-schedule",
+      "title": "Графік відпрацювань",
+      "description": "Графік відпрацювань співробітників кол-центру.",
+      "category": "makeup-schedule",
+      "url": "https://docs.google.com/spreadsheets/d/15fRxY7SvLoRWKOpupAsBBRv8YHn7nr42IyiVChjpdrQ/edit?usp=sharing",
+      "type": "sheets",
+      "status": "available"
+    },
     {
       "id": "regulation-call-centre",
       "title": "Регламент КЦ",
@@ -627,6 +534,50 @@ window.portalCatalog = {
       "url": "https://docs.google.com/spreadsheets/d/1F0C9tNikEEaGNxrd3O9YuRADAP0ktc_iCrqVJRGPlWY/edit?usp=sharing",
       "type": "sheets",
       "status": "available"
+    },
+    {
+      "id": "payroll-managers",
+      "title": "Розрахунок Менеджерів",
+      "description": "Таблиця розрахунків менеджерів.",
+      "category": "payroll",
+      "url": "https://docs.google.com/spreadsheets/d/1esw302QAkdoAmsBgFraSR2DZJDFr7Z9GGMT8QW84D_o/edit?usp=sharing",
+      "type": "sheets",
+      "status": "available",
+      "modalIcon": "users",
+      "modalAccent": "#a4a2ff"
+    },
+    {
+      "id": "payroll-team-leader-hr",
+      "title": "Розрахунок Team Leader & HR",
+      "description": "Таблиця розрахунків Team Leader та HR.",
+      "category": "payroll",
+      "url": "https://docs.google.com/spreadsheets/d/1lKwsUEj0xrvA7qGzEkF-1XO0s6otyPoX1yu1fSFS7j4/edit?usp=sharing",
+      "type": "sheets",
+      "status": "available",
+      "modalIcon": "headset",
+      "modalAccent": "#71cafa"
+    },
+    {
+      "id": "payroll-admin",
+      "title": "Розрахунок admin",
+      "description": "Таблиця розрахунків admin.",
+      "category": "payroll",
+      "url": "https://docs.google.com/spreadsheets/d/15D0nsmPQzU9WBjzUPaPDd0rCm6oHxTDmC7DJanPw7gw/edit?usp=sharing",
+      "type": "sheets",
+      "status": "available",
+      "modalIcon": "settings",
+      "modalAccent": "#70d3cf"
+    },
+    {
+      "id": "staff-responsibilities",
+      "title": "Посадові обов’язки та розподіл зон відповідальності співробітників кол-центру",
+      "description": "Єдиний документ про обов’язки та відповідальність команди.",
+      "category": "roles",
+      "url": "https://docs.google.com/document/d/1RHl51OBY9mcx5KrbjBaZ0N7XpEwbMC6sNfd3Gq67CjY/edit?usp=sharing",
+      "type": "docs",
+      "status": "available",
+      "modalIcon": "users",
+      "modalAccent": "#d19bef"
     }
   ]
 };

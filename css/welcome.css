@@ -1,0 +1,38 @@
+/* One uninterrupted greeting, independent of resource dialog presentation. */
+body.welcome-open { overflow: hidden; }
+#welcome-dialog {
+  width: min(540px, calc(100% - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: #edf3ff;
+  border: 1px solid #a18bf16b;
+  border-radius: 22px;
+  background: radial-gradient(ellipse at 0 0, #774bce18, transparent 65%), linear-gradient(145deg, #111c32, #091225);
+  box-shadow: 0 24px 90px #0008, 0 0 36px #794af01a, inset 0 1px 0 #c5bcff0d;
+}
+#welcome-dialog[open] { animation: welcome-appear .22s ease-out; }
+#welcome-dialog::backdrop { background: #020717c9; backdrop-filter: blur(7px); }
+.welcome-content { padding: 36px; text-align: left; }
+.welcome-logo { display: block; margin-bottom: 25px; border-radius: 13px; box-shadow: 0 0 24px #7c6cdb20; }
+#welcome-title { font-size: clamp(25px, 3vw, 30px); font-weight: 600; letter-spacing: -.5px; line-height: 1.25; margin: 0 0 22px; overflow-wrap: anywhere; }
+#welcome-message p { color: #b7c5df; font-size: 15px; line-height: 1.75; margin: 0 0 15px; }
+#welcome-accent { color: #b9dfff; font-size: 15px; line-height: 1.6; margin: 23px 0 27px; text-shadow: 0 0 14px #57adff26; }
+#welcome-continue { display: block; width: 100%; min-height: 48px; padding: 12px 18px; border: 1px solid #b6a2ff7a; border-radius: 11px; font: inherit; font-size: 15px; font-weight: 600; line-height: 1.5; color: #f5f1ff; background: linear-gradient(110deg, #6d3fb7, #315a9d); box-shadow: 0 0 19px #8254dd1a; cursor: pointer; transition: border-color .18s, box-shadow .18s, filter .18s; }
+#welcome-continue:hover { border-color: #c5b5ff; box-shadow: 0 0 24px #8254dd30; filter: brightness(1.12); }
+#welcome-continue:focus-visible { outline: 2px solid #8dd7ff; outline-offset: 4px; }
+@keyframes welcome-appear { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 600px) {
+  .welcome-content { padding: 27px 23px; }
+  .welcome-logo { width: 48px; height: 48px; margin-bottom: 21px; }
+  #welcome-title { font-size: 25px; }
+  #welcome-message p { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #welcome-dialog[open] { animation: none; }
+  #welcome-continue { transition: none; }
+}

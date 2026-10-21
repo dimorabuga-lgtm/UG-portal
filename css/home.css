@@ -283,33 +283,41 @@
   .portal-home .filter-button{min-height:44px;font-size:11px}
   .portal-home .resource-card::after{right:12px;font-size:108px}
 }
-/* Small vector illustrations are decorative; actions remain above them. */
-.portal-home .resource-card::after{content:'';width:105px;height:123px;right:0;bottom:0;top:auto;border:0;border-radius:0;background-image:url('../assets/resource-art.svg');background-repeat:no-repeat;background-size:500% 100%;background-position:0 0;opacity:.5;transform:rotate(8deg);filter:drop-shadow(0 4px 5px #0006)}
-.portal-home .resource-card:nth-child(2)::after{content:'';background-position:25% 0}
-.portal-home .resource-card:nth-child(3)::after{content:'';background-position:50% 0;transform:rotate(8deg)}
-.portal-home .resource-card:nth-child(5)::after{content:'';background-position:75% 0}
-.portal-home .resource-card:nth-child(6)::after,.portal-home .resource-card:nth-child(7)::after{content:'';background-position:100% 0}
-.portal-home .resource-card h2,.portal-home .resource-card p{padding-right:8px}
+/* Generated illustrations are decorative; text and actions stay above the artwork. */
+.portal-home .resource-card[data-resource-id="regulations"]{--card-art:url('../assets/cards/regulations.webp')}
+.portal-home .resource-card[data-resource-id="schedule"]{--card-art:url('../assets/cards/schedule.webp')}
+.portal-home .resource-card[data-resource-id="makeup-schedule"]{--card-art:url('../assets/cards/schedule.webp')}
+.portal-home .resource-card[data-resource-id="operator-payments"]{--card-art:url('../assets/cards/payroll.webp')}
+.portal-home .resource-card[data-resource-id="extra-shifts"]{--card-art:url('../assets/cards/extra-shifts.webp')}
+.portal-home .resource-card[data-resource-id="responsibilities"]{--card-art:url('../assets/cards/roles.webp')}
+.portal-home .resource-card[data-resource-id="instructions"]{--card-art:url('../assets/cards/instructions.webp')}
+.portal-home .resource-card[data-resource-id="learning"]{--card-art:url('../assets/cards/training.webp')}
+.portal-home .resource-card[data-resource-id="faq"]{--card-art:url('../assets/cards/faq.webp')}
+.portal-home .resource-card[data-resource-id]::after{content:'';width:53%;height:100%;right:-7px;bottom:0;top:auto;border:0;border-radius:0;background-image:var(--card-art);background-repeat:no-repeat;background-size:cover;background-position:center;mask-image:linear-gradient(90deg,transparent,#000 38%);opacity:.72;transform:none;filter:brightness(.85) saturate(.9);mix-blend-mode:screen;pointer-events:none}
+.portal-home .resource-card[data-resource-id="regulations"]::after{filter:brightness(.6) saturate(1.25)}
+.portal-home .resource-card h2,.portal-home .resource-card p{padding-right:8px;text-shadow:0 1px 5px #030915,0 0 10px #030915}
+.portal-home .resource-card p{max-width:calc(100% - 30px)}
+.portal-home .resource-card .resource-action{width:60%;max-width:190px;min-width:125px;background:#08142ee0}
 .team-online-heading .online-dot::after{display:none}
 .team-online-heading .online-dot{display:grid;place-items:center}
 .team-online-heading .online-dot svg{width:21px;height:21px;color:#54d3ff}
-@media(max-width:600px){.portal-home .resource-card::after{width:103px;height:120px;right:0}}
+@media(max-width:600px){.portal-home .resource-card[data-resource-id]::after{width:48%;opacity:.65}.portal-home .resource-card .resource-action{width:70%;min-height:44px}}
 /* Text-free artwork beneath accessible, independently editable HTML copy. */
 .portal-home .hero.hero-live{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:1fr auto;aspect-ratio:1983/793;min-height:340px;padding:32px 34px;gap:23px;background:#050c20}
 .hero-artwork{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .portal-home .hero.hero-live::after{background:linear-gradient(90deg,#040b1c66,transparent 65%);z-index:0}
 .portal-home .hero-live .hero-copy{align-self:center;width:min(440px,55%);max-width:100%;text-align:left}
 .portal-home .hero-live .eyebrow:empty{display:none}
-.portal-home .hero-live h1{font-size:clamp(38px,3.8vw,56px);font-weight:650;letter-spacing:-1.2px;line-height:1.14;margin:0 0 20px;color:#f1f7ff;text-shadow:0 0 12px #43a9ff30,0 0 26px #7665ff18}
+.portal-home .hero-live h1{font-family:"Bahnschrift","Segoe UI",Arial,sans-serif;font-size:clamp(42px,4.4vw,62px);font-weight:600;letter-spacing:-.8px;line-height:1.12;margin:0 0 20px;color:#f1f7ff;text-shadow:0 0 12px #43a9ff30,0 0 26px #7665ff18}
 .portal-home .hero-live h1 span{background-image:linear-gradient(105deg,#d59aff 5%,#ad8cff 42%,#4bdcff 95%);text-shadow:none;filter:drop-shadow(0 0 6px #a05bff70) drop-shadow(0 0 16px #626bff45)}
-.portal-home .hero-live .hero-copy>p{font-size:16px;font-weight:400;letter-spacing:.1px;line-height:1.65;color:#c9def4;max-width:310px;margin:0;text-shadow:0 0 12px #47c6ff30}
+.portal-home .hero-live .hero-copy>p{font-size:18px;font-weight:400;letter-spacing:.1px;line-height:1.6;color:#c9def4;max-width:330px;margin:0;text-shadow:0 0 12px #47c6ff30}
 .portal-home .hero-live .benefits{gap:9px;align-self:end}
 .portal-home .hero-live .benefits>div{padding:10px 12px;background:#061029c9;border-color:#8061d375}
 .portal-home .hero-live .benefits>div:nth-child(2){border-color:#18b7e57a}
 .portal-home .hero-live .benefits h2{font-size:11px}
 @media(max-width:1250px){
   .portal-home .hero.hero-live{padding:27px 25px;aspect-ratio:auto;min-height:350px}
-  .portal-home .hero-live h1{font-size:42px}
+  .portal-home .hero-live h1{font-size:48px}
   .portal-home .hero-live .hero-copy{width:min(360px,67%);max-width:100%}
 }
 @media(max-width:600px){
@@ -317,8 +325,8 @@
   .hero-artwork{object-position:70% center}
   .portal-home .hero.hero-live::after{background:linear-gradient(90deg,#040b1ce8,#040b1c9c 48%,#040b1c0c)}
   .portal-home .hero-live .hero-copy{width:100%;max-width:100%;text-align:left}
-  .portal-home .hero-live h1{font-size:clamp(30px,8.2vw,36px);letter-spacing:-.7px;line-height:1.16;margin:0 0 16px}
-  .portal-home .hero-live .hero-copy>p{font-size:14px;max-width:210px}
+  .portal-home .hero-live h1{font-size:clamp(34px,9vw,40px);letter-spacing:-.4px;line-height:1.14;margin:0 0 16px}
+  .portal-home .hero-live .hero-copy>p{font-size:15.5px;max-width:230px}
   .portal-home .hero-live .benefits{gap:7px}
   .portal-home .hero-live .benefits>div{padding:8px;gap:6px}
   .portal-home .hero-live .benefits h2{font-size:10px}

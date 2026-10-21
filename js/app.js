@@ -31,18 +31,25 @@ const search = document.querySelector('#resource-search');
 const clear = document.querySelector('#clear-search');
 const results = document.querySelector('#search-results');
 const status = document.querySelector('#search-status');
-const storageKeys = {favorites: 'ug.portal.favorites.v1', recent: 'ug.portal.recent.v1'};
+const storageKeys = {favorites: 'ug.portal.favorites.v1', recent: 'ug.portal.recent.v1', recentTimes: 'ug.portal.recent-times.v1'};
 function readStored(key) {
   try { const value = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(value) ? [...new Set(value.filter(id => typeof id === 'string'))] : []; }
   catch { return []; }
 }
 let favorites = new Set(readStored(storageKeys.favorites));
 let recent = readStored(storageKeys.recent).slice(0, 5);
+let recentTimes = {};
+try {
+  const stored = JSON.parse(localStorage.getItem(storageKeys.recentTimes) || '{}');
+  if(stored && typeof stored==='object' && !Array.isArray(stored)) {
+    recentTimes=Object.fromEntries(recent.filter(id=>Object.hasOwn(stored,id)&&Number.isFinite(stored[id])&&stored[id]>0&&stored[id]<=Date.now()).map(id=>[id,stored[id]]));
+  }
+} catch {}
 let activeFilter = 'all';
 const filters = [
   {id:'all', title:'Усі ресурси'},
   {id:'regulations', title:'Регламенти', categories:['regulations']},
-  {id:'schedules', title:'Графіки', categories:['schedule','extra-shifts']},
+  {id:'schedules', title:'Графіки', categories:['schedule','makeup-schedule','extra-shifts']},
   {id:'payments', title:'Розрахунки', categories:['payroll','extra-shifts']},
   {id:'instructions', title:'Інструкції', categories:['instructions','roles','faq']},
   {id:'training', title:'Навчання', categories:['training']},
@@ -68,7 +75,9 @@ function documentState(resource) {
 function remember(resource) {
   if (!documentState(resource).url) return;
   recent = [resource.id, ...recent.filter(id => id !== resource.id)].slice(0,5);
-  persist(storageKeys.recent, recent); renderRecent();
+  recentTimes[resource.id]=Date.now();
+  recentTimes=Object.fromEntries(recent.filter(id=>Object.hasOwn(recentTimes,id)).map(id=>[id,recentTimes[id]]));
+  persist(storageKeys.recent, recent);persist(storageKeys.recentTimes,recentTimes);renderRecent();
 }
 const types = {sheets: ['Google Sheets', '▦'], docs: ['Google Docs', '▤'], pdf: ['PDF', 'PDF'], site: ['Інший сайт', '↗']};
 const normalize = value => String(value || '').normalize('NFKC').toLocaleLowerCase('uk').replace(/[’ʼ`]/g, "'").trim();
@@ -122,7 +131,7 @@ function renderDocuments(container, documents, modalView = false, append = false
     const {url, label} = documentState(resource);
     copy.append(element('span', 'document-status', label));
     if (modalView && !url) copy.append(element('span','missing-regulation-link',label === 'Очікує посилання' ? 'Посилання ще не додано' : label));
-    const isSearch = container === results;
+    const isSearch = container === results && !categories.some(category=>category.directResourceId===resource.id);
     const action = element(url && !isSearch ? 'a' : 'button', 'document-action', isSearch ? 'Переглянути' : resource.buttonLabel || 'Відкрити');
     if (isSearch) {
       action.type='button'; action.addEventListener('click',()=>{
@@ -179,6 +188,12 @@ function renderSections(category) {
   dialog.dataset.layout=count===5?'five':count===2?'two':count===1?'one':'grid';
 }
 function openCategory(category, focusId = null) {
+  if(category.directResourceId) {
+    const resource=resources.find(item=>item.id===category.directResourceId);
+    const url=resource && documentState(resource).url;
+    if(url){window.open(url,'_blank','noopener,noreferrer');remember(resource);}
+    return;
+  }
   if(!dialog.open){modalTrigger=document.activeElement;savedScroll=window.scrollY;}
   clearTimeout(closeTimer);dialog.classList.remove('is-closing');
   dialog.classList.add('portal-dialog');
@@ -210,10 +225,21 @@ categories.forEach((category, index) => {
   const card = element('article', 'resource-card'); card.dataset.resourceId = category.id;
   card.style.setProperty('--accent', category.accent); card.style.setProperty('--glow', category.accent); card.style.setProperty('--delay', `${index * 35}ms`);
   const icon = element('span', 'card-icon'); icon.setAttribute('aria-hidden', 'true');
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', '0 0 24 24'); svg.innerHTML = icons[category.icon] || icons.check; icon.append(svg);
-  const button = element('button', 'resource-action category-action', category.buttonLabel);
-  button.type = 'button'; button.setAttribute('aria-haspopup', 'dialog'); button.setAttribute('aria-controls', 'resource-dialog'); button.setAttribute('aria-label', `Відкрити розділ: ${category.title}`);
-  button.addEventListener('click', () => openCategory(category));
+  icon.append(svgIcon(({roles:'users',instructions:'book'})[category.category] || category.icon));
+  const directResource=resources.find(resource=>resource.id===category.directResourceId);
+  const directUrl=directResource && documentState(directResource).url;
+  const button = element(directUrl?'a':'button', 'resource-action category-action', category.buttonLabel);
+  if(category.directResourceId) {
+    if(directUrl){
+      button.href=directUrl;button.target='_blank';button.rel='noopener noreferrer';
+      button.setAttribute('aria-label',`Відкрити: ${directResource.title} (у новій вкладці)`);
+      button.addEventListener('click',()=>remember(directResource));
+      button.addEventListener('auxclick',event=>{if(event.button===1)remember(directResource);});
+    }else{button.type='button';button.disabled=true;button.textContent='Посилання ще не додано';}
+  }else{
+    button.type = 'button'; button.setAttribute('aria-haspopup', 'dialog'); button.setAttribute('aria-controls', 'resource-dialog'); button.setAttribute('aria-label', `Відкрити розділ: ${category.title}`);
+    button.addEventListener('click', () => openCategory(category));
+  }
   card.append(icon, element('h2', '', category.title), element('p', '', category.description), button); grid.append(card);
 });
 function closeDialog(){
@@ -256,6 +282,7 @@ function filter() {
   if (matches.length) renderDocuments(results, matches);
   let groupCount=0;
   if(words.length && activeFilter!=='favorites')categories.forEach(category=>{
+    if(category.directResourceId)return;
     if(selected.categories&&!selected.categories.includes(category.category))return;
     const sections=(category.sections || []).filter(section=>words.every(word=>normalize(`${section.title} ${section.description} ${category.title} ${(section.questions || []).map(item=>`${item.question} ${item.answer}`).join(' ')}`).includes(word)));
     const rootMatch=words.every(word=>normalize(`${category.title} ${category.description}`).includes(word));
@@ -284,33 +311,58 @@ filters.forEach(item => {
   document.querySelector('#category-filters').append(button);
 });
 const quickDefaults = [
-  {category:'schedule', title:'Графік роботи'}, {category:'payroll', title:'Розрахунок операторів'},
+  {category:'schedule', title:'Графік роботи'}, {category:'payroll', title:'Розрахунки'},
   {category:'extra-shifts', resourceId:'extra-shifts-and-fines', title:'Додаткові виходи та штрафи'},
   {category:'regulations', title:'Регламенти'}, {category:'instructions', title:'Робочі інструкції'}
 ];
 (window.portalCatalog.quickAccess || quickDefaults).forEach(item => {
   const category = categories.find(category => category.category === item.category);
-  const resource = resources.find(resource => resource.id === item.resourceId);
+  const resource = resources.find(resource => resource.id === (item.resourceId || category?.directResourceId));
   const url = resource && documentState(resource).url;
   const control = element(url ? 'a' : 'button', 'quick-link', item.title || resource?.title || category?.title);
   if (url) { control.href = url; control.target = '_blank'; control.rel = 'noopener noreferrer'; control.addEventListener('click', () => remember(resource)); control.addEventListener('auxclick', event => { if (event.button === 1) remember(resource); }); }
   else { control.type = 'button'; control.addEventListener('click', () => { if (category) openCategory(category); }); }
   document.querySelector('#quick-links').append(control);
 });
+const relativeTime = new Intl.RelativeTimeFormat('uk', {numeric:'always',style:'short'});
+function recentTimeLabel(timestamp) {
+  const seconds=Math.max(0,Math.floor((Date.now()-timestamp)/1000));
+  if(seconds<60)return 'Щойно';
+  if(seconds<3600)return relativeTime.format(-Math.floor(seconds/60),'minute');
+  if(seconds<86400)return relativeTime.format(-Math.floor(seconds/3600),'hour');
+  return relativeTime.format(-Math.floor(seconds/86400),'day');
+}
 function renderRecent() {
   const container = document.querySelector('#recent-links'); container.replaceChildren();
   const documents = recent.map(id => resources.find(resource => resource.id === id)).filter(Boolean);
   document.querySelector('#clear-history').hidden = !recent.length;
+  document.querySelector('#show-recent').hidden = !documents.length;
   if (!documents.length) { container.append(element('p', 'recent-empty', 'Відкриті документи з’являться тут')); return; }
   documents.forEach(resource => {
     const url = documentState(resource).url;
     const link = element(url ? 'a' : 'button', 'recent-link');
-    link.append(element('span', '', resource.title), element('small', '', categoryLabel(resource)));
+    const icon=element('span',`recent-document-icon recent-type-${resource.type || 'site'}`);icon.setAttribute('aria-hidden','true');
+    const category=categories.find(category=>resourceCategories(resource).includes(category.category));
+    icon.append(svgIcon(category?.icon || (resource.type==='sheets'?'calendar':'check')));
+    const name=element('span','recent-document-name',resource.title);
+    const timestamp=recentTimes[resource.id];
+    const time=element(timestamp?'time':'span','recent-time',timestamp?recentTimeLabel(timestamp):'Нещодавно');
+    if(timestamp){time.dateTime=new Date(timestamp).toISOString();time.title=new Date(timestamp).toLocaleString('uk-UA');}
+    link.title=`${resource.title} · ${categoryLabel(resource)}`;
+    link.append(icon,name,time);
     if (url) { link.href=url; link.target='_blank'; link.rel='noopener noreferrer'; link.addEventListener('click', () => remember(resource)); link.addEventListener('auxclick', event => { if (event.button===1) remember(resource); }); }
     else { link.type='button'; link.disabled=true; link.append(element('small', '', documentState(resource).label)); }
     container.append(link);
   });
 }
-document.querySelector('#clear-history').addEventListener('click', () => { recent=[]; persist(storageKeys.recent, recent); renderRecent(); });
+document.querySelector('#show-recent').addEventListener('click',()=>{
+  const documents=recent.map(id=>resources.find(resource=>resource.id===id)).filter(Boolean);
+  openCategory({category:'recent',title:'Нещодавно відкриті',modalDescription:'Останні п’ять документів у цьому браузері.',accent:'#77d8ff',icon:'calendar',sections:documents.map(resource=>({id:`recent-${resource.id}`,title:resource.title,description:resource.description,icon:resource.type==='sheets'?'calendar':'check',resourceIds:[resource.id]}))});
+});
+document.querySelector('#clear-history').addEventListener('click', () => { recent=[];recentTimes={};persist(storageKeys.recent, recent);persist(storageKeys.recentTimes,recentTimes);renderRecent(); });
+setInterval(()=>{
+  if(document.hidden)return;
+  document.querySelectorAll('.recent-time[datetime]').forEach(time=>{time.textContent=recentTimeLabel(Date.parse(time.dateTime));});
+},60000);
 renderRecent(); filter();
 })();

@@ -1,0 +1,98 @@
+/* A readable document library for every resource category. */
+#resource-dialog.portal-dialog {
+  width: min(960px, calc(100% - 48px));
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  border: 1px solid #8b8fc45c;
+  border-radius: 22px;
+  background: radial-gradient(ellipse at 0 0, #6b48a813, transparent 70%), #0a1425;
+  box-shadow: 0 28px 110px #0009, 0 0 42px #6165b514;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-color: #53678a #0a1425;
+}
+#resource-dialog.portal-dialog::backdrop { background: #020714cc; backdrop-filter: blur(8px); }
+.portal-dialog .dialog-panel { padding: 24px; }
+.portal-dialog .dialog-header {
+  position: sticky;
+  top: -24px;
+  z-index: 3;
+  align-items: center;
+  gap: 15px;
+  margin: -1px -2px 18px;
+  padding: 15px 2px 20px;
+  border-bottom: 1px solid #a4bfe21c;
+  border-radius: 0;
+  background: #0a1425f7;
+  box-shadow: 0 10px 14px #0a1425ba;
+}
+.portal-dialog .dialog-header h2 { font-size: 27px; font-weight: 600; line-height: 1.3; letter-spacing: -.4px; margin: 0 0 5px; }
+.portal-dialog .dialog-header p { max-width: 620px; color: #a9bbd5; font-size: 14px; font-weight: 400; line-height: 1.7; margin: 0; }
+.portal-dialog .regulations-header-icon { width: 48px; height: 48px; margin: 0; border-radius: 13px; background: linear-gradient(145deg, #8d69da20, #3287be0e); }
+.portal-dialog .regulations-header-icon svg { width: 25px; height: 25px; }
+.portal-dialog #close-dialog { align-self: flex-start; width: 44px; height: 44px; border-radius: 12px; background: #9eaed30a; color: #c8d8f1; font-size: 25px; transition: background .18s, border-color .18s; }
+.portal-dialog #close-dialog:hover { background: #a48ee51c; border-color: #bda4ff7a; }
+.portal-dialog[data-layout] #dialog-documents { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.portal-dialog[data-layout] #dialog-documents > .modal-resource-card {
+  grid-column: auto;
+  justify-self: stretch;
+  max-width: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 146px;
+  align-items: center;
+  gap: 12px 18px;
+  min-height: 120px;
+  padding: 19px 20px;
+  border: 1px solid color-mix(in srgb, var(--reg-accent) 22%, transparent);
+  border-left: 3px solid color-mix(in srgb, var(--reg-accent) 65%, transparent);
+  border-radius: 14px;
+  background: linear-gradient(105deg, color-mix(in srgb, var(--reg-accent) 5%, #101c30), #0d192b);
+  box-shadow: inset 0 1px 0 #ffffff04;
+  animation: none;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.portal-dialog[data-layout] #dialog-documents > .modal-resource-card:hover { transform: none; border-color: color-mix(in srgb, var(--reg-accent) 48%, transparent); background: linear-gradient(105deg, color-mix(in srgb, var(--reg-accent) 8%, #101c30), #101d31); box-shadow: 0 4px 20px #00000012; }
+.portal-dialog .modal-resource-card > .document-icon { grid-column: 1; align-self: start; width: 46px; height: 46px; margin: 2px 0 0; border-radius: 12px; background: color-mix(in srgb, var(--reg-accent) 10%, transparent); }
+.portal-dialog .modal-resource-card > .document-icon svg { width: 25px; height: 25px; }
+.portal-dialog .modal-resource-card > .document-copy { grid-column: 2; min-width: 0; flex-basis: auto; }
+.portal-dialog .modal-resource-card .document-title-line { gap: 8px; align-items: flex-start; }
+.portal-dialog .modal-resource-card .document-title-line h3 { align-self: center; font-size: 18px; font-weight: 600; line-height: 1.45; letter-spacing: 0; margin: 0; padding: 0; }
+.portal-dialog .modal-resource-card .favorite-button { width: 44px; height: 44px; min-width: 44px; min-height: 44px; margin: -6px 0 0; border: 1px solid transparent; border-radius: 10px; font-size: 23px; color: #98aac6; }
+.portal-dialog .modal-resource-card .favorite-button:hover { border-color: #b69be442; background: #b69be410; }
+.portal-dialog .modal-resource-card .favorite-button[aria-pressed="true"] { color: #ffda8e; background: #dca85c0d; }
+.portal-dialog .modal-resource-card .document-copy > p { color: #b1c2dc; font-size: 14px; font-weight: 400; line-height: 1.7; margin: 3px 0 0; }
+.portal-dialog .modal-resource-card .missing-regulation-link { margin: 9px 0 0; font-size: 12px; color: #d3bd9d; }
+.portal-dialog .modal-resource-card > .document-action { grid-column: 3; grid-row: 1; margin: 0; align-self: center; }
+.portal-dialog .modal-resource-card .document-action { min-height: 44px; padding: 11px 13px; border-radius: 10px; font-size: 13px; font-weight: 500; line-height: 1.5; background: color-mix(in srgb, var(--reg-accent) 11%, #101c32); border-color: color-mix(in srgb, var(--reg-accent) 38%, transparent); color: #e6efff; }
+.portal-dialog .modal-resource-card .document-action[href]:hover { filter: none; background: color-mix(in srgb, var(--reg-accent) 19%, #101c32); box-shadow: 0 0 16px color-mix(in srgb, var(--reg-accent) 10%, transparent); }
+.portal-dialog .modal-resource-card .document-action:disabled { background: #ffffff03; color: #9eacc2; border-color: #a2b4d222; }
+.portal-dialog .modal-resource-card:has(> .section-details) > .document-copy { grid-column: 2 / -1; }
+.portal-dialog .modal-resource-card > .section-details { grid-column: 2 / -1; margin: 0; min-width: 0; }
+.portal-dialog .nested-documents { gap: 10px; }
+.portal-dialog .nested-documents .document-row { border-color: #83a5d32b; background: #081326; padding: 15px; border-radius: 11px; }
+.portal-dialog .nested-documents .document-title-line h3 { font-size: 16px; }
+.portal-dialog .nested-documents .document-icon { margin: 0; width: 37px; height: 39px; }
+.portal-dialog .nested-documents .document-meta { margin-top: 7px; font-size: 11px; color: #99acd0; }
+.portal-dialog .faq-answer { border-color: #859dc736; border-radius: 11px; background: #0a152a; padding: 15px; font-size: 14px; line-height: 1.8; }
+.portal-dialog .faq-answer summary { min-height: 28px; line-height: 1.6; }
+.portal-dialog :focus-visible { outline: 2px solid #8fd5ff; outline-offset: 3px; }
+@media (max-width: 700px) {
+  #resource-dialog.portal-dialog { width: calc(100% - 24px); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); border-radius: 17px; }
+  .portal-dialog .dialog-panel { padding: 16px; }
+  .portal-dialog .dialog-header { top: -16px; gap: 10px; padding: 12px 2px 17px; margin-bottom: 14px; }
+  .portal-dialog .dialog-header h2 { font-size: 22px; }
+  .portal-dialog .dialog-header p { font-size: 12px; }
+  .portal-dialog .regulations-header-icon { display: none; }
+  .portal-dialog[data-layout] #dialog-documents > .modal-resource-card { grid-template-columns: 38px minmax(0,1fr); gap: 10px 12px; padding: 17px 15px; }
+  .portal-dialog .modal-resource-card > .document-icon { width: 38px; height: 40px; border-radius: 10px; }
+  .portal-dialog .modal-resource-card > .document-icon svg { width: 23px; height: 23px; }
+  .portal-dialog .modal-resource-card .document-title-line h3 { font-size: 17px; }
+  .portal-dialog .modal-resource-card .document-copy > p { font-size: 13px; }
+  .portal-dialog .modal-resource-card .favorite-button { margin-top: -5px; }
+  .portal-dialog .modal-resource-card > .document-action { grid-column: 1 / -1; grid-row: 2; margin-top: 2px; }
+  .portal-dialog .modal-resource-card > .section-details { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-dialog .modal-resource-card, .portal-dialog #close-dialog { transition: none; }
+}

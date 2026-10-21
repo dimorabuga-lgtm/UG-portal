@@ -115,6 +115,7 @@ if(process.argv[2]){
     const evaluate=async expression=>{const r=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error('Browser evaluation failed');return r.result.value;};
     await call('Runtime.enable');await call('Page.enable');await call('Page.navigate',{url});await delay(350);
     assert.equal(await evaluate('location.pathname'),'/login');
+    assert.equal(await evaluate(`document.querySelector('#welcome-dialog')`),null);
     for(const width of [1440,1280,768,430,390,375,360]){await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});assert(await evaluate('document.documentElement.scrollWidth<=innerWidth'));}
     await evaluate(`document.querySelector('#full-name').value='Тестовий Оператор'`);
     await evaluate(`document.querySelector('#toggle').click()`);assert.equal(await evaluate(`document.querySelector('#password').type`),'text');
@@ -128,34 +129,49 @@ if(process.argv[2]){
     assert(await evaluate(`document.querySelector('#submit').disabled&&document.querySelector('#login-form').getAttribute('aria-busy')==='true'&&getComputedStyle(document.querySelector('#submit'),'::before').content!=='none'`));
     await delay(350);assert(await evaluate(`document.querySelector('#message').textContent.includes('Неправильний пароль')`));
     await evaluate(`window.fetch=window.qaFetch;delete window.qaFetch`);
-    await evaluate(`document.querySelector('#password').value=${JSON.stringify(env.PORTAL_PASSWORD)};document.querySelector('#login-form').requestSubmit()`);await delay(400);
-    assert.equal(await evaluate('location.pathname'),'/');assert.equal(await evaluate(`document.querySelectorAll('.resource-card').length`),8);
+    await evaluate(`sessionStorage.setItem('ug.portal.welcome.dismissed.v1','true');document.querySelector('#password').value=${JSON.stringify(env.PORTAL_PASSWORD)};document.querySelector('#login-form').requestSubmit()`);await delay(400);
+    assert.equal(await evaluate('location.pathname'),'/');assert.equal(await evaluate(`document.querySelectorAll('.resource-card').length`),9);
+    assert(await evaluate(`document.querySelector('#welcome-dialog').open`));
+    assert.equal(await evaluate(`document.querySelectorAll('#welcome-dialog button').length`),1);
+    assert.equal(await evaluate(`document.activeElement.id`),'welcome-continue');
+    for(const width of [1440,1280,768,430,390,375,360]){
+      await call('Emulation.setDeviceMetricsOverride',{width,height:740,deviceScaleFactor:1,mobile:false});
+      assert(await evaluate(`(()=>{const d=document.querySelector('#welcome-dialog'),r=d.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&d.scrollWidth<=d.clientWidth;})()`));
+    }
+    await evaluate(`document.querySelector('#welcome-continue').click()`);await delay(30);
+    assert(await evaluate(`!document.querySelector('#welcome-dialog').open&&!document.body.classList.contains('welcome-open')`));
+    assert.equal(await evaluate(`fetch('/js/portal-links.js').then(r=>r.status)`),200,'Dismissal preserves server authorization');
     assert(await evaluate(`document.querySelector('#online-people').textContent.includes('Тестовий Оператор')`));
     assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'ready');
+    assert.equal(await evaluate(`document.querySelector('#stat-online').textContent`),'1');
     // Controlled responses exercise presentation states; real two-session isolation is tested in check-presence.
     await evaluate(`window.qaPresenceFetch=window.fetch;window.qaPeople=[];window.qaPresenceError=false;window.fetch=(url,...args)=>String(url).startsWith('/api/presence')?Promise.resolve(new Response(JSON.stringify(String(url).endsWith('heartbeat')?{ok:true}:{people:window.qaPeople,count:window.qaPeople.length,identified:true}),{status:window.qaPresenceError?503:200,headers:{'Content-Type':'application/json'}})):window.qaPresenceFetch(url,...args);window.dispatchEvent(new Event('pageshow'))`);
     await delay(60);assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'empty');
     await evaluate(`window.qaPresenceError=true;window.dispatchEvent(new Event('pageshow'))`);
     await delay(60);assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'error');
+    assert.equal(await evaluate(`document.querySelector('#stat-online').textContent`),'—');
     assert(await evaluate(`document.querySelector('#online-count').hidden&&document.querySelector('#online-people').children.length===0`));
     await evaluate(`window.qaPresenceError=false;window.qaPeople=[{name:'<img src=x onerror=alert(1)>'},{name:'А'.repeat(80)}];window.dispatchEvent(new Event('pageshow'))`);
     await delay(60);assert.equal(await evaluate(`document.querySelector('#online-count').textContent`),'2');
+    assert.equal(await evaluate(`document.querySelector('#stat-online').textContent`),'2');
     assert.equal(await evaluate(`document.querySelectorAll('#online-people img').length`),0);
     for(const width of [1440,768,430,390,375,360]){await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});assert(await evaluate('document.documentElement.scrollWidth<=innerWidth'));}
     await evaluate(`window.fetch=window.qaPresenceFetch;delete window.qaPresenceFetch;window.dispatchEvent(new Event('pageshow'))`);await delay(60);
     assert.equal(await evaluate(`document.cookie.includes('${COOKIE}')`),false);
     await call('Page.reload');await delay(250);assert.equal(await evaluate('location.pathname'),'/');
+    assert.equal(await evaluate(`document.querySelector('#welcome-dialog').open`),false,'Greeting remains dismissed on reload');
     assert.equal(await evaluate(`fetch('/js/portal-links.js').then(r=>r.status)`),200);
     // Exercise the real catalog after login under the authenticated response CSP.
-    await evaluate(`document.addEventListener('click',e=>{if(e.target.closest('a.document-action'))e.preventDefault()});`);
-    for(let i=0;i<8;i++){
+    await evaluate(`document.addEventListener('click',e=>{if(e.target.closest('a.document-action,a.category-action,a.quick-link'))e.preventDefault()});`);
+    const modalCount=await evaluate(`document.querySelectorAll('button.category-action:not(:disabled)').length`);
+    for(let i=0;i<modalCount;i++){
 
-      await evaluate(`document.querySelectorAll('.category-action')[${i}].click()`);
+      await evaluate(`document.querySelectorAll('button.category-action:not(:disabled)')[${i}].click()`);
       assert(await evaluate(`document.querySelector('#resource-dialog').open`));
       await evaluate(`document.querySelector('#close-dialog').click()`);await delay(220);
     }
-    assert(await evaluate(`(()=>{document.querySelector('[data-filter="schedules"]').click();const s=document.querySelector('#resource-search');s.value='Графік роботи операторів';s.dispatchEvent(new Event('input'));const action=document.querySelector('#search-results .document-action');action.click();const link=document.querySelector('#dialog-documents a.document-action');return link&&link.href==='https://docs.google.com/spreadsheets/d/1F0C9tNikEEaGNxrd3O9YuRADAP0ktc_iCrqVJRGPlWY/edit?usp=sharing'&&link.target==='_blank';})()`));
-    await evaluate(`document.querySelector('#dialog-documents .favorite-button').click();document.querySelector('#dialog-documents a.document-action').click();document.querySelector('#close-dialog').click();`);
+    assert(await evaluate(`(()=>{document.querySelector('[data-filter="schedules"]').click();const s=document.querySelector('#resource-search');s.value='Графік роботи операторів';s.dispatchEvent(new Event('input'));const link=document.querySelector('#search-results a.document-action');link.click();return !document.querySelector('#resource-dialog').open&&link.href==='https://docs.google.com/spreadsheets/d/1F0C9tNikEEaGNxrd3O9YuRADAP0ktc_iCrqVJRGPlWY/edit?usp=sharing'&&link.target==='_blank';})()`));
+    await evaluate(`document.querySelector('#search-results .favorite-button').click();document.querySelector('#search-results a.document-action').click();`);
     await delay(220);assert.equal(await evaluate(`document.querySelectorAll('.recent-link').length`),1);
     await evaluate(`document.querySelector('[data-filter="favorites"]').click()`);assert.equal(await evaluate(`document.querySelectorAll('#search-results .document-row').length`),1);
     await evaluate(`document.querySelector('#search-results .favorite-button').click();document.querySelector('#clear-history').click();document.querySelector('[data-filter="all"]').click();document.querySelector('#clear-search').click();`);
@@ -163,6 +179,9 @@ if(process.argv[2]){
     await evaluate(`document.querySelector('#logout').click()`);await delay(300);assert.equal(await evaluate('location.pathname'),'/login');
     assert.equal(await evaluate(`fetch('/js/portal-links.js').then(r=>r.status)`),401);
     await call('Page.navigate',{url:url+'/index.html'});await delay(250);assert.equal(await evaluate('location.pathname'),'/login');
+    await evaluate(`document.querySelector('#full-name').value='Тестовий Оператор';document.querySelector('#password').value=${JSON.stringify(env.PORTAL_PASSWORD)};document.querySelector('#login-form').requestSubmit()`);await delay(350);
+    assert.equal(await evaluate('location.pathname'),'/');assert(await evaluate(`document.querySelector('#welcome-dialog').open`),'A new login after logout shows the greeting again');
+    await evaluate(`document.querySelector('#welcome-continue').click()`);
     assert.equal(errors.length,0);console.log('PASS: real browser login, error, reveal password, HttpOnly, reload, protected document config, logout, direct index denial and mobile login/portal; no JavaScript exceptions.');
   }finally{socket?.close();child.kill();await new Promise(resolve=>server.close(resolve));}
 }
