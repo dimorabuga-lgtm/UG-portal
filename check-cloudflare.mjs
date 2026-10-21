@@ -19,6 +19,7 @@ const environment={...process.env,CLOUDFLARE_INCLUDE_PROCESS_ENV:'false',CLOUDFL
 const persist=path.join(work,'state');
 function run(args){return new Promise((resolve,reject)=>{const child=spawn(process.execPath,[cli,...args],{cwd:work,env:environment,stdio:['ignore','pipe','pipe']});let output='';child.stdout.on('data',chunk=>output+=chunk);child.stderr.on('data',chunk=>output+=chunk);child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(Error('Wrangler setup failed: '+output.replaceAll(password,'[redacted]').replaceAll(secret,'[redacted]'))));});}
 await run(['d1','execute','AUTH_RATE_LIMIT','--local','--config',config,'--file',path.join(root,'migrations/0001_auth_rate_limit.sql'),'--persist-to',persist]);
+await run(['d1','execute','AUTH_RATE_LIMIT','--local','--config',config,'--file',path.join(root,'migrations/0002_session_presence.sql'),'--persist-to',persist]);
 // Pages dev requires a local dev-vars file; these disposable test-only values are removed below.
 const devVars=path.join(work,'.dev.vars');
 await writeFile(devVars,`PORTAL_PASSWORD=${password}\nSESSION_SECRET=${secret}\n`,{mode:0o600});
@@ -34,12 +35,16 @@ try{
   }
   assert.equal((await request('/index.html',{headers:{Accept:'text/html'}})).headers.get('Location'),'/login');
   const page=await request('/login');assert.equal(page.status,200);assert(page.headers.get('Cache-Control').includes('no-store'));
-  const login=value=>request('/api/login',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:JSON.stringify({password:value})});
+  const login=value=>request('/api/login',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:JSON.stringify({password:value,name:"Тестовий Оператор"})});
   assert.equal((await login('wrong')).status,401);
   assert.equal((await request('/api/login')).status,405);
   assert.equal((await request('/api/logout')).status,405);
   const success=await login(password);assert.equal(success.status,200);const cookie=success.headers.get('Set-Cookie').split(';')[0];
   const headers={Cookie:cookie};
+  assert.equal((await request('/api/presence')).status,401);
+  assert.equal((await request('/api/presence/heartbeat',{method:'POST',headers:{Origin:base}})).status,401);
+  const presence=await request('/api/presence',{headers});assert.equal(presence.status,200);const online=await presence.json();assert.equal(online.count,1);assert.equal(online.people[0].name,'Тестовий Оператор');assert.deepEqual(Object.keys(online.people[0]),['name']);
+  assert.equal((await request('/api/presence/heartbeat',{method:'POST',headers:{...headers,Origin:base}})).status,200);
   for(const route of ['/','/js/app.js','/js/portal-links.js','/css/styles.css','/assets/ug.svg']){const r=await request(route,{headers});assert.equal(r.status,200,route);assert(r.headers.get('Cache-Control').includes('no-store'));}
   const schedule=await(await request('/js/portal-links.js',{headers})).text();assert(schedule.includes('1F0C9tNikEEaGNxrd3O9YuRADAP0ktc_iCrqVJRGPlWY'));
   assert.equal((await request('/unknown',{headers})).status,404);
@@ -47,6 +52,7 @@ try{
   assert.equal((await request('/server/auth.mjs',{headers})).status,404);
   const logout=await request('/api/logout',{method:'POST',headers:{...headers,Origin:base}});assert.equal(logout.status,200);assert(logout.headers.get('Set-Cookie').includes('Max-Age=0'));
   assert.equal((await request('/js/portal-links.js',{headers})).status,401);
+  assert.equal((await request('/api/presence',{headers})).status,401);
   console.log('PASS: actual Wrangler/workerd + local D1: login, methods, middleware on static files, route handling, private cache headers, schedule preservation, unknown-route 404, logout revocation.');
 }finally{
   await unlink(devVars).catch(()=>{});

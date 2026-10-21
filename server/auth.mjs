@@ -51,19 +51,25 @@ async function verifiedToken(request, env, now = Math.floor(Date.now()/1000)) {
   if (!await crypto.subtle.verify('HMAC', await key(env), bytes, encoder.encode(`${issued}.${expiry}.${nonce}`))) return false;
   return {nonce,expiry:+expiry};
 }
-export async function validSession(request, env, now = Math.floor(Date.now()/1000)) {
+export async function authenticatedSession(request, env, now = Math.floor(Date.now()/1000), strict = false) {
   const token = await verifiedToken(request,env,now);
   if (!token) return false;
   try {
     const session = await env.AUTH_RATE_LIMIT.prepare('SELECT expires FROM auth_sessions WHERE id = ?1').bind(token.nonce).first();
-    return Boolean(session && session.expires > now && session.expires === token.expiry);
-  } catch { authDiagnostic('SESSION_LOOKUP_FAILED'); return false; }
+    return session && session.expires > now && session.expires === token.expiry ? {id:token.nonce,expires:token.expiry} : null;
+  } catch (error) { authDiagnostic('SESSION_LOOKUP_FAILED'); if(strict)throw error;return null; }
+}
+export async function validSession(request, env, now = Math.floor(Date.now()/1000)) {
+  return Boolean(await authenticatedSession(request,env,now));
 }
 export async function revokeSession(request,env) {
   const token = await verifiedToken(request,env);
   if (!token) return;
   // Do not swallow database failures and report a successful logout without revocation.
   await env.AUTH_RATE_LIMIT.prepare('DELETE FROM auth_sessions WHERE id = ?1').bind(token.nonce).run();
+  // The old schema remains usable if the separate presence migration is not installed yet.
+  try { await env.AUTH_RATE_LIMIT.prepare('DELETE FROM session_presence WHERE session_id = ?1').bind(token.nonce).run(); }
+  catch { authDiagnostic('PRESENCE_CLEANUP_FAILED'); }
 }
 export function sessionCookie(request, value, maxAge = TTL) {
   return `${COOKIE}=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${maxAge}${new URL(request.url).protocol === 'https:' ? '; Secure' : ''}`;
@@ -79,11 +85,12 @@ export async function allowAttempt(request, env, now = Math.floor(Date.now()/100
     started = CASE WHEN started <= ?2 - 600 THEN ?2 ELSE started END RETURNING attempts`).bind(identity,now).first();
   return row && row.attempts <= 10;
 }
-export async function readPassword(request) {
+export async function readLoginRequest(request) {
   if (!(request.headers.get('Content-Type') || '').startsWith('application/json')) return null;
   const reader = request.body?.getReader(); if (!reader) return null;
   let total = 0; const chunks = [];
   while (true) { const {done,value} = await reader.read(); if (done) break; total += value.length; if (total > 4096) { await reader.cancel(); return null; } chunks.push(value); }
-  try { const bytes = new Uint8Array(total); let offset=0; for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;} const data=JSON.parse(new TextDecoder().decode(bytes)); return typeof data.password === 'string' && data.password.length <= 1024 ? data.password : null; }
+  try { const bytes = new Uint8Array(total); let offset=0; for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;} const data=JSON.parse(new TextDecoder().decode(bytes)); return typeof data.password === 'string' && data.password.length <= 1024 ? {password:data.password,name:data.name} : null; }
   catch { return null; }
 }
+export async function readPassword(request) { return (await readLoginRequest(request))?.password ?? null; }

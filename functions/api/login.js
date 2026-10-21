@@ -1,4 +1,5 @@
-import {configurationIssues,authDiagnostic,json,sameOrigin,allowAttempt,readPassword,passwordMatches,createSession,sessionCookie} from '../../server/auth.mjs';
+import {configurationIssues,authDiagnostic,json,sameOrigin,allowAttempt,readLoginRequest,passwordMatches,createSession,sessionCookie} from '../../server/auth.mjs';
+import {normalizeName,registerPresence} from '../../server/presence.mjs';
 export async function onRequest({request,env,waitUntil}) {
   const requestId=crypto.randomUUID();
   const reply=(data,status=200,headers={})=>json(data,status,{'X-Request-ID':requestId,...headers});
@@ -11,11 +12,14 @@ export async function onRequest({request,env,waitUntil}) {
   try {
     if (!await allowAttempt(request,env)) return reply({error:'Забагато спроб. Спробуйте пізніше.'},429,{'Retry-After':'600'});
     stage='LOGIN_REQUEST_READ_FAILED';
-    const password = await readPassword(request);
+    const credentials = await readLoginRequest(request);
     stage='PASSWORD_CHECK_FAILED';
-    if (password === null || !await passwordMatches(password,env.PORTAL_PASSWORD)) return reply({error:'Неправильний пароль'},401);
+    if (credentials === null || !await passwordMatches(credentials.password,env.PORTAL_PASSWORD)) return reply({error:'Неправильний пароль'},401);
+    const name=normalizeName(credentials.name);
+    if(!name)return reply({error:'Введіть ім’я та прізвище — від 1 до 80 символів.'},400);
     stage='SESSION_CREATE_FAILED';
     const token = await createSession(env);
+    await registerPresence(env,token,name);
     // Opportunistic cleanup; limiter data older than an hour is no longer useful.
     if (waitUntil) waitUntil(env.AUTH_RATE_LIMIT.prepare('DELETE FROM login_attempts WHERE started < ?1').bind(Math.floor(Date.now()/1000)-3600).run().catch(()=>{}));
     if (waitUntil) waitUntil(env.AUTH_RATE_LIMIT.prepare('DELETE FROM auth_sessions WHERE expires <= ?1').bind(Math.floor(Date.now()/1000)).run().catch(()=>{}));

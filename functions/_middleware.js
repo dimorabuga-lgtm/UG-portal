@@ -5,6 +5,8 @@ export async function onRequest(context) {
   const {request,env} = context;
   const path = new URL(request.url).pathname;
   if (path === '/api/login' || path === '/api/logout') return context.next();
+  // These handlers validate the same signed/revocable session themselves, returning 503 on D1 failure.
+  if (path === '/api/presence' || path === '/api/presence/' || path === '/api/presence/heartbeat' || path === '/api/presence/heartbeat/') return context.next();
   if (path === '/login' || path === '/login/') {
     if (await validSession(request,env)) return response(null,303,{Location:'/'});
     return loginPage();

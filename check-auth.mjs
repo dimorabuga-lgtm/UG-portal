@@ -8,6 +8,8 @@ import {fileURLToPath} from 'node:url';
 import {onRequest as middleware} from './functions/_middleware.js';
 import {onRequest as login} from './functions/api/login.js';
 import {onRequest as logout} from './functions/api/logout.js';
+import {onRequest as presenceList} from './functions/api/presence/index.js';
+import {onRequest as presenceHeartbeat} from './functions/api/presence/heartbeat.js';
 import {createSession,TTL,COOKIE,validSession,allowAttempt} from './server/auth.mjs';
 
 const root=path.dirname(fileURLToPath(import.meta.url));
@@ -16,6 +18,7 @@ const savedConsoleError=console.error;
 console.error=value=>diagnosticLogs.push(String(value));
 const db=new DatabaseSync(':memory:');
 db.exec(await readFile(path.join(root,'migrations/0001_auth_rate_limit.sql'),'utf8'));
+db.exec(await readFile(path.join(root,'migrations/0002_session_presence.sql'),'utf8'));
 const env={
   PORTAL_PASSWORD:crypto.randomUUID(),
   SESSION_SECRET:crypto.randomUUID()+crypto.randomUUID(),
@@ -25,17 +28,20 @@ const env={
         return {
           async first(){return db.prepare(sql).get(...values);},
           async run(){return db.prepare(sql).run(...values);}
+          ,async all(){return {results:db.prepare(sql).all(...values)};}
         };
       }};
     }
   }
 };
 const origin='https://portal.test';
-const post=(password,ip='test')=>new Request(origin+'/api/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','CF-Connecting-IP':ip},body:JSON.stringify({password})});
+const post=(password,ip='test')=>new Request(origin+'/api/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','CF-Connecting-IP':ip},body:JSON.stringify({password,name:"Тестовий Оператор"})});
 async function dispatch(request,bindings=env){return middleware({request,env:bindings,next:async()=>{
   const pathname=new URL(request.url).pathname;
   if(pathname==='/api/login')return login({request,env:bindings});
   if(pathname==='/api/logout')return logout({request,env:bindings});
+  if(pathname==='/api/presence')return presenceList({request,env:bindings});
+  if(pathname==='/api/presence/heartbeat')return presenceHeartbeat({request,env:bindings});
   // Emulate Pages asset routing against the allowlisted build output only.
   const relative=pathname==='/'?'index.html':decodeURIComponent(pathname.slice(1));
   const target=path.resolve(root,'dist',relative);
@@ -110,6 +116,7 @@ if(process.argv[2]){
     await call('Runtime.enable');await call('Page.enable');await call('Page.navigate',{url});await delay(350);
     assert.equal(await evaluate('location.pathname'),'/login');
     for(const width of [1440,1280,768,430,390,375,360]){await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});assert(await evaluate('document.documentElement.scrollWidth<=innerWidth'));}
+    await evaluate(`document.querySelector('#full-name').value='Тестовий Оператор'`);
     await evaluate(`document.querySelector('#toggle').click()`);assert.equal(await evaluate(`document.querySelector('#password').type`),'text');
     // A 200 HTML fallback or malformed JSON is not a successful server login.
     for(const kind of ['html','invalid-json','not-ok']){
@@ -123,6 +130,19 @@ if(process.argv[2]){
     await evaluate(`window.fetch=window.qaFetch;delete window.qaFetch`);
     await evaluate(`document.querySelector('#password').value=${JSON.stringify(env.PORTAL_PASSWORD)};document.querySelector('#login-form').requestSubmit()`);await delay(400);
     assert.equal(await evaluate('location.pathname'),'/');assert.equal(await evaluate(`document.querySelectorAll('.resource-card').length`),8);
+    assert(await evaluate(`document.querySelector('#online-people').textContent.includes('Тестовий Оператор')`));
+    assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'ready');
+    // Controlled responses exercise presentation states; real two-session isolation is tested in check-presence.
+    await evaluate(`window.qaPresenceFetch=window.fetch;window.qaPeople=[];window.qaPresenceError=false;window.fetch=(url,...args)=>String(url).startsWith('/api/presence')?Promise.resolve(new Response(JSON.stringify(String(url).endsWith('heartbeat')?{ok:true}:{people:window.qaPeople,count:window.qaPeople.length,identified:true}),{status:window.qaPresenceError?503:200,headers:{'Content-Type':'application/json'}})):window.qaPresenceFetch(url,...args);window.dispatchEvent(new Event('pageshow'))`);
+    await delay(60);assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'empty');
+    await evaluate(`window.qaPresenceError=true;window.dispatchEvent(new Event('pageshow'))`);
+    await delay(60);assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'error');
+    assert(await evaluate(`document.querySelector('#online-count').hidden&&document.querySelector('#online-people').children.length===0`));
+    await evaluate(`window.qaPresenceError=false;window.qaPeople=[{name:'<img src=x onerror=alert(1)>'},{name:'А'.repeat(80)}];window.dispatchEvent(new Event('pageshow'))`);
+    await delay(60);assert.equal(await evaluate(`document.querySelector('#online-count').textContent`),'2');
+    assert.equal(await evaluate(`document.querySelectorAll('#online-people img').length`),0);
+    for(const width of [1440,768,430,390,375,360]){await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});assert(await evaluate('document.documentElement.scrollWidth<=innerWidth'));}
+    await evaluate(`window.fetch=window.qaPresenceFetch;delete window.qaPresenceFetch;window.dispatchEvent(new Event('pageshow'))`);await delay(60);
     assert.equal(await evaluate(`document.cookie.includes('${COOKIE}')`),false);
     await call('Page.reload');await delay(250);assert.equal(await evaluate('location.pathname'),'/');
     assert.equal(await evaluate(`fetch('/js/portal-links.js').then(r=>r.status)`),200);

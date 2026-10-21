@@ -18,6 +18,8 @@ const assert = require('node:assert/strict');
     const call=(method,params={})=>new Promise((resolve,reject)=>{pending.set(++id,{resolve,reject});socket.send(JSON.stringify({id,method,params}));});
     const evaluate=async expression=>{const r=await call('Runtime.evaluate',{expression,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
     await call('Runtime.enable');await call('Log.enable');await call('Page.enable');
+    // This catalog-only test uses file://; real HTTP/D1 presence is covered by check-auth and check-cloudflare.
+    await call('Page.addScriptToEvaluateOnNewDocument',{source:`const originalFetch=window.fetch;window.fetch=(url,...args)=>String(url).startsWith('/api/presence')?Promise.resolve(new Response(JSON.stringify(String(url).endsWith('heartbeat')?{ok:true,identified:false}:{people:[],count:0,identified:false}),{headers:{'Content-Type':'application/json'}})):originalFetch(url,...args);`});
     await call('Page.navigate',{url:pathToFileURL(path.join(__dirname,'index.html')).href});await sleep(500);
     await evaluate(`localStorage.removeItem('ug.portal.favorites.v1');localStorage.removeItem('ug.portal.recent.v1')`);
     await call('Page.reload');await sleep(300);

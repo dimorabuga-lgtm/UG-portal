@@ -9,20 +9,22 @@
   <title>Внутрішній портал — UG Call Centre</title>
   <link rel="icon" href="assets/ug.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/home.css">
   <script src="js/portal-links.js" defer></script>
   <script src="js/app.js" defer></script>
   <script src="js/session.js" defer></script>
+  <script src="js/presence.js" defer></script>
 </head>
-<body>
+<body class="portal-home">
   <a href="#resources" class="skip-link">Перейти до ресурсів</a>
   <div class="page">
     <header class="header">
-      <a class="brand" href="./" aria-label="UG Call Centre — головна"><img src="assets/ug.svg" width="46" height="46" alt="UG"><span>UG <strong>CALL CENTRE</strong><small>ВНУТРІШНІЙ ПРОСТІР КОМАНДИ</small></span></a>
-      <div class="session-actions"><span class="header-label"><span></span> Єдиний простір. Спільний результат.</span><button id="logout" type="button">Вийти</button><span id="logout-status" role="status"></span></div>
+      <a class="brand" href="./" aria-label="UG Call Centre — головна"><img src="assets/ug.svg" width="46" height="46" alt="UG"><span>UG <strong>CALL CENTRE</strong><small>Внутрішній простір команди</small></span></a>
+      <div class="session-actions"><span class="header-label">UG OS</span><button id="logout" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H5v14h4m6-14 7 7-7 7m7-7H9"/></svg>Вийти</button><span id="logout-status" role="status"></span></div>
     </header>
     <main>
       <section class="hero" aria-labelledby="title">
-        <div class="hero-copy"><span class="eyebrow">UG CALL CENTRE</span><h1 id="title">Внутрішній<br><span>портал</span></h1><p>Уся важлива інформація<br>в одному місці</p><div class="hero-line" aria-hidden="true"></div></div>
+        <div class="hero-copy"><span class="eyebrow">ВАШ РОБОЧИЙ ПРОСТІР</span><h1 id="title">Внутрішній <span>портал</span></h1><p>Усі робочі матеріали вашої команди — в одному місці.</p><div class="hero-line" aria-hidden="true"></div></div>
         <div class="operator-visual" aria-hidden="true">
           <!-- Replace the contents of this component with assets/operator.webp when available. -->
           <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
@@ -46,19 +48,28 @@
           </svg>
         </div>
         <aside class="benefits" aria-label="Наші принципи">
-          <div><span class="benefit-icon">01</span><section><h2>Команда</h2><p>Єдність, підтримка<br>та спільні цілі</p></section></div>
-          <div><span class="benefit-icon">02</span><section><h2>Системність</h2><p>Чіткі правила<br>та злагоджені процеси</p></section></div>
-          <div><span class="benefit-icon">03</span><section><h2>Результат</h2><p>Якість у кожній дії<br>та впевнене зростання</p></section></div>
+          <div><span class="benefit-icon">01</span><section><h2>Команда</h2><p>Єдність і підтримка</p></section></div>
+          <div><span class="benefit-icon">02</span><section><h2>Системність</h2><p>Чіткі робочі процеси</p></section></div>
+          <div><span class="benefit-icon">03</span><section><h2>Результат</h2><p>Якість у кожній дії</p></section></div>
         </aside>
       </section>
       <section class="portal-search" aria-label="Пошук документів">
         <label for="resource-search">Пошук ресурсів</label>
-        <div class="search-field"><input id="resource-search" type="search" autocomplete="off" placeholder="Знайти таблицю, регламент або інструкцію..."><button id="clear-search" type="button" hidden>Очистити</button></div>
+        <div class="search-field"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input id="resource-search" type="search" autocomplete="off" placeholder="Знайти таблицю, регламент або інструкцію..."><button id="clear-search" type="button" hidden>Очистити</button></div>
         <p id="search-status" role="status" aria-live="polite"></p>
         <div id="search-results" class="document-list" hidden></div>
       </section>
-      <section class="quick-access" aria-labelledby="quick-title"><h2 id="quick-title">Швидкий доступ</h2><div id="quick-links" class="quick-links"></div></section>
-      <section class="recent-access" aria-labelledby="recent-title"><div class="navigation-heading"><h2 id="recent-title">Нещодавно відкриті</h2><button id="clear-history" type="button" hidden>Очистити історію</button></div><div id="recent-links" class="recent-links"></div></section>
+      <div class="workspace-tools">
+        <section class="quick-access" aria-labelledby="quick-title"><h2 id="quick-title">Швидкий доступ</h2><div id="quick-links" class="quick-links"></div></section>
+        <section class="recent-access" aria-labelledby="recent-title"><div class="navigation-heading"><h2 id="recent-title">Нещодавно відкриті</h2><button id="clear-history" type="button" hidden>Очистити історію</button></div><div id="recent-links" class="recent-links"></div></section>
+      </div>
+      <section class="team-online" aria-labelledby="team-online-title" aria-busy="true">
+        <div class="team-online-heading"><h2 id="team-online-title"><span class="online-dot" aria-hidden="true"></span>Команда онлайн</h2><span id="online-count" hidden></span></div>
+        <p id="online-status" role="status" aria-live="polite">Завантажуємо список команди…</p>
+        <ul id="online-people" aria-label="Оператори онлайн" hidden></ul>
+        <p id="online-name-notice" hidden>Щоб ваше ім’я з’явилося в списку, вийдіть і увійдіть знову, вказавши ім’я.</p>
+      </section>
+      <div class="resources-heading"><h2>Робочі ресурси</h2><p>Документи та інструменти вашої команди</p></div>
       <nav id="category-filters" class="category-filters" aria-label="Фільтри ресурсів"></nav>
       <p id="storage-status" role="status"></p>
       <section id="resources" aria-label="Робочі ресурси"><div id="resource-grid" class="resource-grid"></div><noscript><p>Увімкніть JavaScript, щоб переглянути робочі ресурси.</p></noscript></section>
