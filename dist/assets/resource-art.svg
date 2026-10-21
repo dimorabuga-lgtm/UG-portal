@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="140" viewBox="0 0 600 140" fill="none">
+  <defs>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a063ed"/><stop offset=".5" stop-color="#392267"/><stop offset="1" stop-color="#111532"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#217db4"/><stop offset=".6" stop-color="#17385f"/><stop offset="1" stop-color="#0c172f"/></linearGradient>
+    <linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ca88c1"/><stop offset="1" stop-color="#3b275d"/></linearGradient>
+    <filter id="shadow" x="-50%" y="-30%" width="200%" height="200%"><feDropShadow dx="3" dy="8" stdDeviation="4" flood-color="#020615" flood-opacity=".9"/></filter>
+  </defs>
+  <g filter="url(#shadow)" transform="translate(19 13) rotate(-9 40 55)">
+    <path d="M4 4H64L83 23V108H4Z" fill="#28174b" stroke="#8c58c5"/>
+    <path d="M0 0H60L79 19V104H0Z" fill="url(#purple)" stroke="#ae79ee"/>
+    <path d="M60 0V19H79" fill="#c394fa" fill-opacity=".35" stroke="#bd8af7"/>
+    <rect x="20" y="-4" width="38" height="10" rx="3" fill="#5b348c" stroke="#b682ef"/>
+    <g stroke="#b788ee" stroke-width="2" opacity=".8"><path d="M13 31H20V38H13ZM29 34H63M13 48H20V55H13ZM29 51H63M13 65H20V72H13ZM29 68H63M13 84H62"/></g>
+  </g>
+  <g filter="url(#shadow)" transform="translate(134 23) rotate(-9 43 50)">
+    <rect x="3" y="4" width="88" height="100" rx="7" fill="#0b2139" stroke="#3c87b6"/>
+    <rect width="88" height="100" rx="7" fill="url(#blue)" stroke="#58bcf4"/>
+    <path d="M1 25H87" stroke="#59bded"/>
+    <path d="M20-8V11M67-8V11" stroke="#122e48" stroke-width="8" stroke-linecap="round"/>
+    <path d="M20-8V11M67-8V11" stroke="#73cfee" stroke-width="3" stroke-linecap="round"/>
+    <g fill="#62ade0" fill-opacity=".5"><rect x="10" y="36" width="16" height="15" rx="2"/><rect x="35" y="36" width="16" height="15" rx="2"/><rect x="60" y="36" width="16" height="15" rx="2"/><rect x="10" y="59" width="16" height="15" rx="2"/><rect x="35" y="59" width="16" height="15" rx="2"/><rect x="60" y="59" width="16" height="15" rx="2"/><rect x="10" y="82" width="16" height="10" rx="2"/><rect x="35" y="82" width="16" height="10" rx="2"/></g>
+  </g>
+  <g filter="url(#shadow)" transform="translate(265 14) rotate(7 36 55)">
+    <rect x="4" y="4" width="70" height="110" rx="10" fill="#211939" stroke="#8064ce"/>
+    <rect width="70" height="110" rx="10" fill="url(#purple)" stroke="#a18af2"/>
+    <rect x="9" y="10" width="52" height="25" rx="4" fill="#0a132c" stroke="#897bd0"/>
+    <path d="M20 26H49" stroke="#6aabef" stroke-width="2"/>
+    <g fill="#7265bc" stroke="#b097f0" stroke-opacity=".5"><rect x="10" y="45" width="12" height="12" rx="3"/><rect x="29" y="45" width="12" height="12" rx="3"/><rect x="48" y="45" width="12" height="12" rx="3"/><rect x="10" y="64" width="12" height="12" rx="3"/><rect x="29" y="64" width="12" height="12" rx="3"/><rect x="48" y="64" width="12" height="12" rx="3"/><rect x="10" y="83" width="12" height="12" rx="3"/><rect x="29" y="83" width="12" height="12" rx="3"/><rect x="48" y="83" width="12" height="12" rx="3"/></g>
+  </g>
+  <g filter="url(#shadow)" transform="translate(364 20)">
+    <g fill="url(#purple)" stroke="#8e78bb"><circle cx="24" cy="38" r="15"/><path d="M2 94V76a22 22 0 0 1 44 0v18Z"/><circle cx="88" cy="38" r="15"/><path d="M66 94V76a22 22 0 0 1 44 0v18Z"/></g>
+    <g fill="url(#pink)" stroke="#c6a6e0"><circle cx="56" cy="28" r="19"/><path d="M28 109V75a28 28 0 0 1 56 0v34Z"/></g>
+    <path d="M49 52L56 65L64 52M56 65V89" stroke="#dbbced" stroke-opacity=".5"/>
+  </g>
+  <g filter="url(#shadow)" transform="translate(488 22) rotate(8 50 50)">
+    <path d="M0 8Q25-4 50 9Q75-4 100 8V103Q75 92 50 104Q25 92 0 103Z" fill="#271e49" stroke="#ac8dd6"/>
+    <path d="M3 3Q26-7 50 5Q74-7 97 3V97Q75 87 50 99Q25 87 3 97Z" fill="url(#purple)" stroke="#c1a0ed"/>
+    <path d="M50 5V99" stroke="#d6b5f6"/>
+    <g stroke="#c9a7ee" opacity=".6"><path d="M12 20Q26 15 42 22M12 33Q26 28 42 35M12 46Q26 41 42 48M12 59Q26 54 42 61M12 72Q26 67 42 74M59 22Q73 15 88 20M59 35Q73 28 88 33M59 48Q73 41 88 46M59 61Q73 54 88 59M59 74Q73 67 88 72"/></g>
+  </g>
+</svg>

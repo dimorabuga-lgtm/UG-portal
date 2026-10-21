@@ -19,39 +19,24 @@
   <a href="#resources" class="skip-link">Перейти до ресурсів</a>
   <div class="page">
     <header class="header">
-      <a class="brand" href="./" aria-label="UG Call Centre — головна"><img src="assets/ug.svg" width="46" height="46" alt="UG"><span>UG <strong>CALL CENTRE</strong><small>Внутрішній простір команди</small></span></a>
-      <div class="session-actions"><span class="header-label">UG OS</span><button id="logout" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H5v14h4m6-14 7 7-7 7m7-7H9"/></svg>Вийти</button><span id="logout-status" role="status"></span></div>
+      <a class="brand" href="./" aria-label="UG Call Centre — головна"><img src="assets/ug.svg" width="46" height="46" alt="UG"><span>UG <strong>CALL CENTRE</strong></span></a>
+      <div class="session-actions"><span class="header-label"><i aria-hidden="true"></i>Єдиний робочий простір</span><button id="logout" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H5v14h4m6-14 7 7-7 7m7-7H9"/></svg>Вийти</button><span id="logout-status" role="status"></span></div>
     </header>
     <main>
-      <section class="hero" aria-labelledby="title">
-        <div class="hero-copy"><span class="eyebrow">ВАШ РОБОЧИЙ ПРОСТІР</span><h1 id="title">Внутрішній <span>портал</span></h1><p>Усі робочі матеріали вашої команди — в одному місці.</p><div class="hero-line" aria-hidden="true"></div></div>
-        <div class="operator-visual" aria-hidden="true">
-          <!-- Replace the contents of this component with assets/operator.webp when available. -->
-          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-          <svg class="operator" viewBox="0 0 360 320" fill="none">
-            <defs><linearGradient id="shirt" x1="130" y1="180" x2="280" y2="310" gradientUnits="userSpaceOnUse"><stop stop-color="#6862C9"/><stop offset="1" stop-color="#25264F"/></linearGradient><linearGradient id="screen" x1="70" y1="200" x2="240" y2="310" gradientUnits="userSpaceOnUse"><stop stop-color="#334D78"/><stop offset="1" stop-color="#141E3A"/></linearGradient><linearGradient id="hair" x1="140" y1="65" x2="240" y2="190"><stop stop-color="#363052"/><stop offset="1" stop-color="#171A31"/></linearGradient></defs>
-            <ellipse cx="183" cy="295" rx="143" ry="17" fill="#080C1C" opacity=".6"/>
-            <path d="M114 227c0-42 27-66 69-66s77 26 77 66v50H114v-50Z" fill="url(#shirt)" stroke="#8F8BDA" stroke-opacity=".3"/>
-            <path d="M166 159v29c7 13 29 14 38 0v-29" fill="#D9A9A6"/>
-            <path d="M133 106c-2-41 24-62 54-62 35 0 58 23 55 63l-7 79-43-9-63 13 4-84Z" fill="url(#hair)"/>
-            <path d="M149 103c0-29 71-31 71 0v28c0 28-19 48-36 48s-35-20-35-48v-28Z" fill="#E5BDB4"/>
-            <path d="M144 112c20-1 44-17 48-35 6 13 18 25 33 29l-4-34-43-15-32 23-2 32Z" fill="url(#hair)"/>
-            <path d="M166 122h4m28 0h4" stroke="#493D56" stroke-width="3" stroke-linecap="round"/><path d="M178 150c5 4 10 4 15 0" stroke="#9F656B" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M134 119V99a50 50 0 0 1 100 0v26" stroke="#8A86D7" stroke-width="8"/><rect x="128" y="108" width="16" height="32" rx="7" fill="#58629E" stroke="#B8B4FA" stroke-width="2"/><rect x="225" y="108" width="16" height="32" rx="7" fill="#58629E" stroke="#B8B4FA" stroke-width="2"/>
-            <path d="M234 138c-1 17-16 23-33 23" stroke="#9F9BE8" stroke-width="3"/><rect x="193" y="157" width="14" height="7" rx="3.5" fill="#B4BEFF"/>
-            <path d="m141 206-21 55m110-55 23 55" stroke="#A09AD4" stroke-opacity=".35" stroke-width="2"/>
-            <path d="M73 219a7 7 0 0 1 7-9h146a10 10 0 0 1 10 8l18 68H93l-20-67Z" fill="url(#screen)" stroke="#6B86BD" stroke-width="2"/>
-            <path d="M88 286h178l-9 8H96l-8-8Z" fill="#495781"/><circle cx="163" cy="248" r="9" stroke="#8B9DCF" stroke-opacity=".6" stroke-width="2"/>
-            <rect x="54" y="134" width="55" height="37" rx="10" fill="#172646" stroke="#4E72AC"/><path d="m73 150 7 7 12-13" stroke="#77D4EF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="259" y="79" width="59" height="43" rx="11" fill="#262347" stroke="#7567B9"/><path d="M273 93h31m-31 8h20" stroke="#B4A1FA" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="280" cy="182" r="5" fill="#53BAE1"/><circle cx="88" cy="83" r="3" fill="#9382EE"/>
-          </svg>
+      <div class="dashboard-layout">
+      <div class="dashboard-main">
+      <section class="hero hero-live" aria-labelledby="title">
+        <img class="hero-artwork" src="assets/hero-operator-branded.png" alt="" width="1983" height="793" fetchpriority="high" decoding="async">
+        <div class="hero-copy">
+          <span class="eyebrow"></span>
+          <h1 id="title">Внутрішній <span>портал</span></h1>
+          <p>Уся важлива інформація<br>в одному місці</p>
         </div>
-        <aside class="benefits" aria-label="Наші принципи">
-          <div><span class="benefit-icon">01</span><section><h2>Команда</h2><p>Єдність і підтримка</p></section></div>
-          <div><span class="benefit-icon">02</span><section><h2>Системність</h2><p>Чіткі робочі процеси</p></section></div>
-          <div><span class="benefit-icon">03</span><section><h2>Результат</h2><p>Якість у кожній дії</p></section></div>
-        </aside>
+        <div class="benefits" aria-label="Переваги порталу">
+          <div><span class="benefit-icon" aria-hidden="true">ϟ</span><h2>Зручний доступ</h2></div>
+          <div><span class="benefit-icon" aria-hidden="true">✓</span><h2>Актуальні матеріали</h2></div>
+          <div><span class="benefit-icon" aria-hidden="true">↗</span><h2>Ефективна робота</h2></div>
+        </div>
       </section>
       <section class="portal-search" aria-label="Пошук документів">
         <label for="resource-search">Пошук ресурсів</label>
@@ -61,18 +46,23 @@
       </section>
       <div class="workspace-tools">
         <section class="quick-access" aria-labelledby="quick-title"><h2 id="quick-title">Швидкий доступ</h2><div id="quick-links" class="quick-links"></div></section>
-        <section class="recent-access" aria-labelledby="recent-title"><div class="navigation-heading"><h2 id="recent-title">Нещодавно відкриті</h2><button id="clear-history" type="button" hidden>Очистити історію</button></div><div id="recent-links" class="recent-links"></div></section>
       </div>
-      <section class="team-online" aria-labelledby="team-online-title" aria-busy="true">
-        <div class="team-online-heading"><h2 id="team-online-title"><span class="online-dot" aria-hidden="true"></span>Команда онлайн</h2><span id="online-count" hidden></span></div>
-        <p id="online-status" role="status" aria-live="polite">Завантажуємо список команди…</p>
-        <ul id="online-people" aria-label="Оператори онлайн" hidden></ul>
-        <p id="online-name-notice" hidden>Щоб ваше ім’я з’явилося в списку, вийдіть і увійдіть знову, вказавши ім’я.</p>
-      </section>
-      <div class="resources-heading"><h2>Робочі ресурси</h2><p>Документи та інструменти вашої команди</p></div>
+      <div class="resources-heading"><h2>Категорії ресурсів</h2><p>Документи та інструменти вашої команди</p></div>
       <nav id="category-filters" class="category-filters" aria-label="Фільтри ресурсів"></nav>
       <p id="storage-status" role="status"></p>
       <section id="resources" aria-label="Робочі ресурси"><div id="resource-grid" class="resource-grid"></div><noscript><p>Увімкніть JavaScript, щоб переглянути робочі ресурси.</p></noscript></section>
+      </div>
+      <aside class="dashboard-sidebar" aria-label="Команда та ваша активність">
+        <section class="team-online" aria-labelledby="team-online-title" aria-busy="true">
+          <div class="team-online-heading"><h2 id="team-online-title"><span class="online-dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5"/></svg></span>Команда онлайн</h2><span id="online-count" hidden></span></div>
+          <p class="widget-caption">На зв’язку у вашому просторі</p>
+          <p id="online-status" role="status" aria-live="polite">Завантажуємо список команди…</p>
+          <ul id="online-people" aria-label="Оператори онлайн" hidden></ul>
+          <p id="online-name-notice" hidden>Щоб ваше ім’я з’явилося в списку, вийдіть і увійдіть знову, вказавши ім’я.</p>
+        </section>
+        <section class="recent-access" aria-labelledby="recent-title"><div class="navigation-heading"><h2 id="recent-title">Нещодавно відкриті</h2><button id="clear-history" type="button" hidden>Очистити історію</button></div><p class="widget-caption">Ваші останні робочі матеріали</p><div id="recent-links" class="recent-links"></div></section>
+      </aside>
+      </div>
       <section class="mission" aria-labelledby="mission-title"><span class="mission-symbol" aria-hidden="true">↗</span><div><h2 id="mission-title">Наша мета</h2><p>Професійна команда • Чіткі процеси • Стабільний результат</p></div><blockquote>Сильна команда — це основа<br>великих досягнень!</blockquote></section>
     </main>
     <footer>UG Call Centre <span>Внутрішній портал</span></footer>
