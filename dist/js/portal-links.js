@@ -6,6 +6,18 @@
 window.portalCatalog = {
   "categories": [
     {
+      "id": "nova-poshta",
+      "hiddenFromGrid": true,
+      "title": "UG Нова пошта",
+      "description": "Перехід до сайту UG Нова пошта.",
+      "buttonLabel": "Відкрити сайт",
+      "icon": "document-plus",
+      "category": "nova-poshta",
+      "directResourceId": "ug-nova-poshta",
+      "accent": "#f28b82",
+      "sections": []
+    },
+    {
       "id": "regulations",
       "title": "Регламенти",
       "description": "Основні правила роботи та стандарти компанії.",
@@ -429,6 +441,11 @@ window.portalCatalog = {
   ],
   "quickAccess": [
     {
+      "category": "nova-poshta",
+      "resourceId": "ug-nova-poshta",
+      "title": "UG Нова пошта"
+    },
+    {
       "category": "schedule",
       "resourceId": "operator-work-schedule",
       "title": "Графік роботи"
@@ -452,6 +469,16 @@ window.portalCatalog = {
     }
   ],
   "resources": [
+    {
+      "id": "ug-nova-poshta",
+      "title": "UG Нова пошта",
+      "description": "Перехід до сайту UG Нова пошта.",
+      "category": "nova-poshta",
+      "url": "https://dimorabuga-lgtm.github.io/UG_novaposhta/",
+      "type": "site",
+      "status": "available",
+      "buttonLabel": "Відкрити сайт"
+    },
     {
       "id": "operator-makeup-schedule",
       "title": "Графік відпрацювань",

@@ -149,6 +149,7 @@ if(process.argv[2]){
     await delay(60);assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'empty');
     await evaluate(`window.qaPresenceError=true;window.dispatchEvent(new Event('pageshow'))`);
     await delay(60);assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'error');
+    assert.equal(await evaluate(`document.querySelector('.team-online').dataset.error`),'heartbeat-503');
     assert.equal(await evaluate(`document.querySelector('#stat-online').textContent`),'—');
     assert(await evaluate(`document.querySelector('#online-count').hidden&&document.querySelector('#online-people').children.length===0`));
     await evaluate(`window.qaPresenceError=false;window.qaPeople=[{name:'<img src=x onerror=alert(1)>'},{name:'А'.repeat(80)}];window.dispatchEvent(new Event('pageshow'))`);
@@ -182,6 +183,11 @@ if(process.argv[2]){
     await evaluate(`document.querySelector('#full-name').value='Тестовий Оператор';document.querySelector('#password').value=${JSON.stringify(env.PORTAL_PASSWORD)};document.querySelector('#login-form').requestSubmit()`);await delay(350);
     assert.equal(await evaluate('location.pathname'),'/');assert(await evaluate(`document.querySelector('#welcome-dialog').open`),'A new login after logout shows the greeting again');
     await evaluate(`document.querySelector('#welcome-continue').click()`);
+    const optionalMetricTest=await call('Page.addScriptToEvaluateOnNewDocument',{source:`const observer=new MutationObserver(()=>{const metric=document.getElementById('stat-online');if(metric){metric.remove();observer.disconnect();}});observer.observe(document,{childList:true,subtree:true});`});
+    await call('Page.reload');await delay(350);
+    assert.equal(await evaluate(`document.querySelector('#stat-online')`),null);
+    assert.equal(await evaluate(`document.querySelector('.team-online').dataset.state`),'ready','Presence must not depend on optional statistics markup');
+    await call('Page.removeScriptToEvaluateOnNewDocument',{identifier:optionalMetricTest.identifier});
     assert.equal(errors.length,0);console.log('PASS: real browser login, error, reveal password, HttpOnly, reload, protected document config, logout, direct index denial and mobile login/portal; no JavaScript exceptions.');
   }finally{socket?.close();child.kill();await new Promise(resolve=>server.close(resolve));}
 }

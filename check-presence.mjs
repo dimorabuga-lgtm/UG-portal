@@ -50,6 +50,8 @@ assert.equal((await request('/api/presence/heartbeat',{method:'POST',cookie:cook
 assert.equal(db.prepare('SELECT display_name,last_seen FROM session_presence WHERE session_id=?').get(idB).last_seen,now-91);
 assert.equal(db.prepare('SELECT display_name FROM session_presence WHERE session_id=?').get(idA).display_name,'Ірина Коваль');
 assert.equal((await request('/api/presence/heartbeat',{method:'POST',cookie:cookieB})).status,200);
+for(let i=0;i<3;i++)assert.deepEqual(await(await request('/api/presence/heartbeat',{method:'POST',cookie:cookieB})).json(),{ok:true,identified:true});
+assert.equal(db.prepare('SELECT COUNT(*) AS n FROM session_presence WHERE session_id=?').get(idB).n,1,'Repeated bodyless heartbeats update one row');
 assert.equal((await(await request('/api/presence',{cookie:cookieA})).json()).count,2);
 assert.equal((await request('/api/presence')).status,401);assert.equal((await request('/api/presence/heartbeat',{method:'POST'})).status,401);
 assert.equal((await request('/api/presence/heartbeat',{method:'POST',cookie:cookieA,foreign:true})).status,403);
@@ -58,6 +60,14 @@ assert.equal((await request('/api/presence/heartbeat',{cookie:cookieA})).status,
 const expired=await createSession(env,now-TTL-1);await registerPresence(env,expired,'Expired',now);assert.equal((await request('/api/presence',{cookie:COOKIE+'='+expired})).status,401);assert.equal((await onlinePeople(env,now)).length,2);
 const legacy=await createSession(env);const legacyCookie=COOKIE+'='+legacy;assert(await validSession(new Request(origin,{headers:{Cookie:legacyCookie}}),env));assert.equal((await(await request('/api/presence',{cookie:legacyCookie})).json()).identified,false);
 assert.equal((await request('/api/presence/heartbeat',{method:'POST',cookie:legacyCookie})).status,200);
+assert.equal((await request('/api/presence/heartbeat',{method:'POST',cookie:COOKIE+'='+expired})).status,401);
+for(const route of ['/api/presence','/api/presence/heartbeat']){
+  const missingBinding=await request(route,{cookie:cookieA,method:route.endsWith('heartbeat')?'POST':'GET',bindings:{...env,AUTH_RATE_LIMIT:undefined}});
+  assert.equal(missingBinding.status,503);
+  const diagnostic=logs.map(line=>JSON.parse(line)).findLast(entry=>entry.requestId===missingBinding.headers.get('X-Request-ID'));
+  assert.equal(diagnostic.code,'D1_BINDING_MISSING');
+  assert.deepEqual(diagnostic.issues,['PRESENCE_SESSION_LOOKUP']);
+}
 const brokenPresence={...env,AUTH_RATE_LIMIT:{prepare(sql){if(sql.includes('session_presence'))throw Error('private database diagnostic');return env.AUTH_RATE_LIMIT.prepare(sql);}}};
 const partialLogin=await signin('Оператор Без Обліку',env.PORTAL_PASSWORD,brokenPresence);assert.equal(partialLogin.status,200,'Presence failure cannot prevent authentication');
 const failed=await request('/api/presence',{cookie:cookieA,bindings:brokenPresence});assert.equal(failed.status,503);assert(!Object.hasOwn(await failed.json(),'people'));
@@ -65,6 +75,29 @@ const brokenAll={...env,AUTH_RATE_LIMIT:{prepare(){throw Error('private failure'
 assert.equal((await request('/api/logout',{cookie:cookieA,method:'POST'})).status,200);
 assert.equal(db.prepare('SELECT * FROM session_presence WHERE session_id=?').get(idA),undefined);
 assert.equal((await request('/api/presence',{cookie:cookieA})).status,401);assert.equal((await(await request('/api/presence',{cookie:cookieB})).json()).count,1);
+assert.equal((await request('/api/presence/heartbeat',{method:'POST',cookie:cookieA})).status,401);
 assert.equal((await onlinePeople(env,now+92)).length,0);
+// Missing migration reproduces the generic error without affecting authentication.
+db.exec('DROP TABLE session_presence');
+for(const route of ['/api/presence','/api/presence/heartbeat']){
+  const missing=await request(route,{cookie:cookieB,method:route.endsWith('heartbeat')?'POST':'GET'});
+  assert.equal(missing.status,503);assert.match(missing.headers.get('X-Request-ID'),/^[a-f0-9-]{36}$/);
+  assert(!(await missing.text()).includes('session_presence'),'SQL details must stay private');
+  const diagnostic=logs.map(line=>JSON.parse(line)).findLast(entry=>entry.requestId===missing.headers.get('X-Request-ID'));
+  assert.equal(diagnostic.code,'PRESENCE_TABLE_MISSING');
+  assert.deepEqual(diagnostic.issues,[route.endsWith('heartbeat')?'PRESENCE_HEARTBEAT_UPDATE':'PRESENCE_LIST_QUERY']);
+}
+assert.equal((await signin('Без Таблиці Присутності')).status,200);
+assert(logs.some(line=>JSON.parse(line).code==='PRESENCE_TABLE_MISSING'));
+db.exec(await readFile(new URL('./migrations/0002_session_presence.sql',import.meta.url),'utf8'));
+assert.equal((await request('/api/presence',{cookie:cookieB})).status,200,'Applying the existing migration restores the endpoint');
+assert.deepEqual(await(await request('/api/presence/heartbeat',{cookie:cookieB,method:'POST'})).json(),{ok:true,identified:false},'Migration cannot recover a name that was never stored');
+const recoveredLogin=await signin('Відновлений Оператор');assert.equal(recoveredLogin.status,200);
+const recoveredCookie=recoveredLogin.headers.get('Set-Cookie').split(';')[0];
+assert.deepEqual(await(await request('/api/presence/heartbeat',{cookie:recoveredCookie,method:'POST'})).json(),{ok:true,identified:true});
+assert.deepEqual(await(await request('/api/presence',{cookie:recoveredCookie})).json(),{people:[{name:'Відновлений Оператор'}],count:1,identified:true});
+db.exec('ALTER TABLE session_presence RENAME COLUMN last_seen TO invalid_column');
+assert.equal((await request('/api/presence',{cookie:cookieB})).status,503);
+assert(logs.some(line=>JSON.parse(line).code==='PRESENCE_SCHEMA_MISMATCH'));
 assert(!logs.join('').includes(env.PORTAL_PASSWORD));assert(!logs.join('').includes(cookieA));assert(!logs.join('').includes('private database diagnostic'));
-console.error=originalLog;db.close();console.log('PASS: normalized/empty/long names, wrong password, two sessions, 90s timeout, heartbeat isolation, expiry, legacy session compatibility, logout removal, unauthorized/CSRF/methods, safe DTOs, idempotent migration and D1 fault isolation.');
+console.error=originalLog;db.close();console.log('PASS: normalized/empty/long names, wrong password, two sessions, 90s timeout, heartbeat isolation, expiry, legacy session compatibility, logout removal, unauthorized/CSRF/methods, safe DTOs, idempotent migration, missing-table reproduction/recovery, schema diagnostics and D1 fault isolation.');

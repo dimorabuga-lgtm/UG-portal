@@ -222,6 +222,7 @@ function openCategory(category, focusId = null) {
   }
 }
 categories.forEach((category, index) => {
+  if (category.hiddenFromGrid) return;
   const card = element('article', 'resource-card'); card.dataset.resourceId = category.id;
   card.style.setProperty('--accent', category.accent); card.style.setProperty('--glow', category.accent); card.style.setProperty('--delay', `${index * 35}ms`);
   const icon = element('span', 'card-icon'); icon.setAttribute('aria-hidden', 'true');

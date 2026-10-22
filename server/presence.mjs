@@ -11,14 +11,25 @@ export async function registerPresence(env,token,name,now=Math.floor(Date.now()/
   try {
     await env.AUTH_RATE_LIMIT.prepare('INSERT INTO session_presence (session_id, display_name, last_seen) VALUES (?1, ?2, ?3)').bind(token.split('.')[2],name,now).run();
     return true;
-  } catch { authDiagnostic('PRESENCE_REGISTER_FAILED');return false; }
+  } catch (error) {
+    authDiagnostic(presenceErrorCode(error,env),undefined,['PRESENCE_REGISTER_FAILED']);
+    return false;
+  }
 }
 export async function requirePresenceSession(request,env,now=Math.floor(Date.now()/1000)) {
   return authenticatedSession(request,env,now,true);
 }
-export function presenceFailure() {
-  authDiagnostic('PRESENCE_STORAGE_FAILED');
-  return json({error:'Не вдалося оновити інформацію про команду. Спробуйте пізніше.'},503);
+function presenceErrorCode(error,env) {
+  // Classify locally; SQL messages, names, tokens and exception details never leave the server.
+  if(env && typeof env.AUTH_RATE_LIMIT?.prepare!=='function')return 'D1_BINDING_MISSING';
+  const message=[error?.message,error?.cause?.message].filter(value=>typeof value==='string').join(' ');
+  return /no such table:\s*(?:main\.)?session_presence\b/i.test(message)?'PRESENCE_TABLE_MISSING'
+    : /no such table:\s*(?:main\.)?auth_sessions\b/i.test(message)?'PRESENCE_AUTH_TABLE_MISSING'
+    : /no such column\b/i.test(message)?'PRESENCE_SCHEMA_MISMATCH':'PRESENCE_STORAGE_FAILED';
+}
+export function presenceFailure(error,requestId=crypto.randomUUID(),stage='PRESENCE_STORAGE_FAILED',env) {
+  authDiagnostic(presenceErrorCode(error,env),requestId,[stage]);
+  return json({error:'Не вдалося оновити інформацію про команду. Спробуйте пізніше.'},503,{'X-Request-ID':requestId});
 }
 export async function onlinePeople(env,now=Math.floor(Date.now()/1000)) {
   const result=await env.AUTH_RATE_LIMIT.prepare(`SELECT p.display_name AS name FROM session_presence p

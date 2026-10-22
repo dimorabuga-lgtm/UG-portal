@@ -1,5 +1,61 @@
 # Команда онлайн
 
+## Діагностика 503 перед змінами production
+
+Локальна реалізація проходить перевірки. Відсутність `session_presence` відтворює 503
+на UPDATE heartbeat і SELECT списку, тоді як вхід працює: `registerPresence` не блокує
+створену сесію при збої присутності. Це перевірений сценарій, а не підтвердження стану
+production. Заголовок `cf-ray` сам по собі не встановлює причину. У цьому checkout є
+лише `wrangler.example.toml` із placeholder ID; production bindings і схема не перевірені.
+
+1. У Pages-проєкті `ug-portal` перевірте Production binding `AUTH_RATE_LIMIT` і точний
+   ідентифікатор прив'язаної D1. Не переприв'язуйте робочу базу навмання.
+2. У журналах Functions знайдіть `portal_auth_failure`. Для відповіді 503 зіставте
+   `X-Request-ID` із `requestId`. Нові записи мають статичний етап у `issues`:
+   `PRESENCE_SESSION_LOOKUP`, `PRESENCE_HEARTBEAT_UPDATE`, `PRESENCE_LIST_QUERY`,
+   `PRESENCE_IDENTITY_QUERY` або `PRESENCE_REGISTER_FAILED` під час входу.
+3. Коди: `D1_BINDING_MISSING` — binding відсутній/не є D1;
+   `PRESENCE_AUTH_TABLE_MISSING` — немає `auth_sessions`;
+   `PRESENCE_TABLE_MISSING` — немає `session_presence`;
+   `PRESENCE_SCHEMA_MISMATCH` — SQL звертається до відсутнього стовпця;
+   `PRESENCE_STORAGE_FAILED` — інша помилка сховища, потрібна перевірка стану D1.
+   Реальні SQL-повідомлення, імена й cookie не журналюються.
+4. У консолі саме прив'язаної D1 виконайте лише читання схеми:
+
+   ```sql
+   SELECT name, sql FROM sqlite_schema
+   WHERE type = 'table' AND name IN ('auth_sessions', 'session_presence');
+   PRAGMA table_info(auth_sessions);
+   PRAGMA table_info(session_presence);
+   ```
+
+Очікувані поля: `auth_sessions(id, expires)` та
+`session_presence(session_id, display_name, last_seen)`; `session_id` — первинний ключ,
+FK на `auth_sessions(id)` з `ON DELETE CASCADE`. Якщо підтверджено відсутність лише
+`session_presence`, застосуйте наявну міграцію 0002 за інструкцією нижче. Якщо таблиця
+вже існує з іншою схемою, зупиніться й порівняйте схеми: `IF NOT EXISTS` не ремонтує
+стовпці. Нової міграції чи автоматичного DDL в обробниках немає.
+
+## Безпечне розгортання та перевірка
+
+Збережіть production binding і секрети. За підтвердженої відсутності таблиці спочатку
+застосуйте 0002 до перевіреної бази. Потім виконайте `node check-presence.mjs`,
+`node check-auth.mjs`, `node check-release.cjs`, `node check-cloudflare.mjs` і розгорніть
+через наявний pipeline Pages: build `node build.cjs`, output `dist`, корінь проєкту
+має містити `functions` та `server`. Простого завантаження статичної `dist` недостатньо
+для оновлення серверних обробників.
+
+Після розгортання у браузері чинного оператора перевірте POST без тіла: 200,
+`{ok:true, identified:true}`; GET: 200, `{people:[{name:...}], count:..., identified:true}`.
+Кілька heartbeat однієї сесії не збільшують кількість. Перевірте дві різні сесії,
+вихід (401 для обох API) і відсутність неактивної сесії у списку після 90 секунд.
+Сесія без збереженого імені отримує `identified:false`: після відновлення таблиці
+потрібно вийти й увійти з ім'ям знову. Ім'я відсутнє в cookie, і heartbeat його не
+приймає, тому безпечне автоматичне відновлення такого запису неможливе.
+
+Довідка Cloudflare: https://developers.cloudflare.com/pages/functions/bindings/
+і https://developers.cloudflare.com/pages/functions/wrangler-configuration/.
+
 ## Підготовка бази перед публікацією
 
 Нових секретів або binding не потрібно. Використовується чинний `AUTH_RATE_LIMIT`, підключений до D1 `ug-portal-auth`.
