@@ -87,9 +87,16 @@ for(const route of ['/api/presence','/api/presence/heartbeat']){
   assert.equal(diagnostic.code,'PRESENCE_TABLE_MISSING');
   assert.deepEqual(diagnostic.issues,[route.endsWith('heartbeat')?'PRESENCE_HEARTBEAT_UPDATE':'PRESENCE_LIST_QUERY']);
 }
-assert.equal((await signin('Без Таблиці Присутності')).status,200);
+const missingTableLogin=await signin('Без Таблиці Присутності');
+assert.equal(missingTableLogin.status,200);
+const missingTableCookie=missingTableLogin.headers.get('Set-Cookie').split(';')[0];
+assert(await validSession(new Request(origin,{headers:{Cookie:missingTableCookie}}),env),'Missing presence migration must not change authentication');
+const sessionsBeforeMigration=db.prepare('SELECT id, expires FROM auth_sessions ORDER BY id').all();
 assert(logs.some(line=>JSON.parse(line).code==='PRESENCE_TABLE_MISSING'));
 db.exec(await readFile(new URL('./migrations/0002_session_presence.sql',import.meta.url),'utf8'));
+assert.deepEqual(db.prepare('SELECT id, expires FROM auth_sessions ORDER BY id').all(),sessionsBeforeMigration,'Presence migration preserves all auth sessions');
+assert(await validSession(new Request(origin,{headers:{Cookie:missingTableCookie}}),env));
+assert.deepEqual(await(await request('/api/presence/heartbeat',{cookie:missingTableCookie,method:'POST'})).json(),{ok:true,identified:false},'A login during the outage needs its name registered again after recovery');
 assert.equal((await request('/api/presence',{cookie:cookieB})).status,200,'Applying the existing migration restores the endpoint');
 assert.deepEqual(await(await request('/api/presence/heartbeat',{cookie:cookieB,method:'POST'})).json(),{ok:true,identified:false},'Migration cannot recover a name that was never stored');
 const recoveredLogin=await signin('Відновлений Оператор');assert.equal(recoveredLogin.status,200);
@@ -99,5 +106,5 @@ assert.deepEqual(await(await request('/api/presence',{cookie:recoveredCookie})).
 db.exec('ALTER TABLE session_presence RENAME COLUMN last_seen TO invalid_column');
 assert.equal((await request('/api/presence',{cookie:cookieB})).status,503);
 assert(logs.some(line=>JSON.parse(line).code==='PRESENCE_SCHEMA_MISMATCH'));
-assert(!logs.join('').includes(env.PORTAL_PASSWORD));assert(!logs.join('').includes(cookieA));assert(!logs.join('').includes('private database diagnostic'));
+assert(!logs.join('').includes(env.PORTAL_PASSWORD));assert(!logs.join('').includes(env.SESSION_SECRET));assert(!logs.join('').includes(cookieA));assert(!logs.join('').includes(idA));assert(!logs.join('').includes('Ірина Коваль'));assert(!logs.join('').includes('private database diagnostic'));
 console.error=originalLog;db.close();console.log('PASS: normalized/empty/long names, wrong password, two sessions, 90s timeout, heartbeat isolation, expiry, legacy session compatibility, logout removal, unauthorized/CSRF/methods, safe DTOs, idempotent migration, missing-table reproduction/recovery, schema diagnostics and D1 fault isolation.');
