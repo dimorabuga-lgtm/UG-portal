@@ -1,0 +1,71 @@
+/* Layout adjustments only: retain all portal content, artwork and actions. */
+@media (max-width: 1440px) {
+  .portal-home .header { flex-wrap: wrap; }
+  .portal-home .session-actions { min-width: 0; }
+  .portal-home .quick-link { max-width: 100%; overflow-wrap: anywhere; }
+  .portal-home .hero-live h1 { font-size: clamp(34px, 3.5vw, 50px); }
+  .portal-home .hero-live .benefits { display: flex; flex-wrap: wrap; }
+  .portal-home .hero-live .benefits > div,
+  .portal-home .hero-live .benefits > div + div { flex: 0 1 auto; margin: 0; }
+  .portal-home .resource-card .resource-action { max-width: 100%; }
+  .postal-brand-name { white-space: normal; overflow-wrap: anywhere; }
+}
+
+@media (min-width: 1001px) and (max-width: 1440px) {
+  .dashboard-layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; }
+  .portal-home .resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .portal-home .hero-live .hero-copy { width: 75%; }
+  .portal-home .hero.hero-live { min-height: 350px; }
+}
+
+@media (max-width: 1000px) {
+  .portal-home .header-label { display: inline-flex; max-width: none; }
+  .portal-home .session-actions { max-width: 55%; }
+  .dashboard-sidebar { align-items: start; }
+  .dashboard-sidebar > * { min-width: 0; max-width: 100%; }
+  .portal-home .hero-live .hero-copy { width: 65%; }
+  .portal-home .mission { flex-wrap: wrap; }
+  .portal-home .mission blockquote { flex-basis: 100%; max-width: none; margin: 0; }
+}
+
+@media (max-width: 600px) {
+  .portal-home .page { width: calc(100% - 24px); }
+  .portal-home .header { position: relative; gap: 12px; }
+  .portal-home .brand { flex: 1 1 auto; }
+  .portal-home .brand img { flex-shrink: 0; }
+  .portal-home .session-actions { display: contents; }
+  .portal-home .header-label { order: 3; flex-basis: 100%; font-size: 10px; line-height: 1.5; }
+  .portal-home #logout { flex-shrink: 0; }
+  .portal-home #logout-status:not(:empty) { top: 100%; right: 0; max-width: 100%; }
+  .portal-home .hero.hero-live { aspect-ratio: auto; min-height: 330px; padding: 24px 16px 18px; }
+  .portal-home .hero-live .hero-copy { width: 100%; }
+  .portal-home .hero-live h1 { font-size: clamp(30px, 8.5vw, 40px); }
+  .portal-home .hero-live .benefits { margin-top: 12px; gap: 8px; }
+  .portal-home .hero-live .benefits > div,
+  .portal-home .hero-live .benefits > div + div { min-width: 0; padding: 8px; }
+  .portal-home .search-field { flex-wrap: wrap; }
+  .portal-home .search-field input { flex: 1 1 140px; width: 0; font-size: 16px; }
+  .portal-home #clear-search { min-height: 44px; }
+  .portal-home .category-filters { flex-wrap: wrap; overflow-x: visible; }
+  .portal-home .filter-button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+  .portal-home .resource-card .resource-action { min-height: 44px; }
+  .portal-home .resource-card p { max-width: 100%; }
+  .dashboard-sidebar { grid-template-columns: minmax(0, 1fr); }
+  .daily-wish { padding: 20px; }
+  .wish-button-icon { flex-shrink: 0; }
+  .help-contact-link > span:first-child { min-width: 0; }
+  .portal-home .mission { padding: 18px; }
+  .portal-home .mission > div { flex: 1 1 150px; min-width: 0; }
+  .portal-home .mission blockquote { padding-left: 14px; }
+  .portal-home footer { flex-wrap: wrap; gap: 10px; line-height: 1.6; }
+  .postal-brand-name { font-size: 16px; }
+}
+
+@media (max-width: 360px) {
+  .portal-home .brand { font-size: 12px; gap: 7px; }
+  .postal-button { gap: 8px; padding-left: 10px; }
+  .postal-brand-icon { width: 28px; height: 28px; }
+  .postal-brand-name { font-size: 14px; }
+  .postal-search-icon { width: 44px; }
+  .daily-wish { padding: 16px; }
+}

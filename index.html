@@ -7,16 +7,24 @@
   <meta name="robots" content="noindex,nofollow">
   <meta name="description" content="Внутрішній портал UG Call Centre — робочі таблиці, регламенти та інструкції в одному місці.">
   <title>Внутрішній портал — UG Call Centre</title>
-  <link rel="icon" href="assets/ug.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/app-icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="UG Портал">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/welcome.css">
   <link rel="stylesheet" href="css/widgets.css">
   <link rel="stylesheet" href="css/resource-dialog.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/install.css">
+  <script src="js/install.js" defer></script>
   <script src="js/portal-links.js" defer></script>
   <script src="js/app.js" defer></script>
   <script src="js/session.js" defer></script>
   <script src="js/welcome.js" defer></script>
+  <script src="js/daily-wish.js" defer></script>
 </head>
 <body class="portal-home">
   <a href="#resources" class="skip-link">Перейти до ресурсів</a>
@@ -73,6 +81,22 @@
           <div class="widget-heading"><h2 id="recent-title"><svg class="recent-heading-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>Нещодавно відкриті</h2><button id="show-recent" type="button" aria-haspopup="dialog" aria-controls="resource-dialog" hidden>Всі <span aria-hidden="true">→</span></button></div>
           <div id="recent-links" class="recent-links"></div>
           <div class="recent-footer"><button id="clear-history" type="button" hidden>Очистити історію</button></div>
+        </section>
+                <section class="daily-wish" aria-labelledby="daily-wish-title">
+          <div class="wish-topline"><span class="wish-kicker">МАЛЕНЬКА ПАУЗА ДЛЯ СЕБЕ</span><span class="wish-spark" aria-hidden="true">✧</span></div>
+          <h2 id="daily-wish-title">Побажання<br><span>на день</span></h2>
+          <div class="wish-orbit" aria-hidden="true"><span>✦</span><i>✧</i><b>✧</b></div>
+          <div class="wish-note"><span class="wish-note-label" id="wish-note-label">ДЛЯ ТЕБЕ СЬОГОДНІ</span><p id="daily-wish-message" role="status" aria-live="polite" aria-atomic="true">Нехай день почнеться з чогось доброго. Тут на тебе чекає маленьке побажання.</p></div>
+          <button id="daily-wish-button" type="button"><span>Відкрити побажання</span><span class="wish-button-icon" aria-hidden="true">✦</span></button>
+          <small class="wish-footnote">Один клік — трохи більше тепла</small>
+        </section>
+        <section class="help-contacts" aria-labelledby="help-contacts-title">
+          <div class="widget-heading"><h2 id="help-contacts-title">Контакти допомоги</h2></div>
+          <p>Потрібна допомога? Напиши в Telegram.</p>
+          <a class="help-contact-link" href="https://t.me/DMYTRO2356" target="_blank" rel="noopener noreferrer" aria-label="Написати @DMYTRO2356 у Telegram (у новій вкладці)"><span>Telegram · @DMYTRO2356</span><span aria-hidden="true">↗</span></a>
+        </section>
+        <section class="newcomer-guide" aria-label="Шлях новачка">
+          <img src="assets/newcomer-path.png" alt="Шлях новачка: 1. Прочитай регламент. 2. Налаштуй інструменти. 3. Вивчи скрипти. 4. Прослухай розмови." width="1024" height="1536" decoding="async">
         </section>
       </aside>
       </div>

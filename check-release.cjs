@@ -19,7 +19,11 @@ for(const file of files(output)){
 }
 const vm=require('node:vm'),context={window:{}};vm.createContext(context);
 vm.runInContext(fs.readFileSync(path.join(output,'js/portal-links.js'),'utf8'),context);
-assert.equal(context.window.portalCatalog.categories.length,10);
+assert.equal(context.window.portalCatalog.categories.length,12);
+assert.equal(context.window.portalCatalog.resources.find(item=>item.id==='ug-telephony').url,'https://ug-call-centre.iptel.ua/login');
+assert(context.window.portalCatalog.categories.some(item=>item.id==='telephony' && item.directResourceId==='ug-telephony'));
+assert.equal(context.window.portalCatalog.resources.filter(item=>item.category==='scripts').length,106);
+assert(context.window.portalCatalog.categories.some(item=>item.category==='scripts' && !item.directResourceId));
 assert.equal(context.window.portalCatalog.resources.find(item=>item.id==='operator-work-schedule').url,'https://docs.google.com/spreadsheets/d/1F0C9tNikEEaGNxrd3O9YuRADAP0ktc_iCrqVJRGPlWY/edit?usp=sharing');
 assert.deepEqual(JSON.parse(fs.readFileSync(path.join(output,'_routes.json'))),{version:1,include:['/*'],exclude:[]});
 console.log('PASS: clean allowlisted production build, no server files/configuration in public output, full middleware coverage and unchanged schedule URL.');

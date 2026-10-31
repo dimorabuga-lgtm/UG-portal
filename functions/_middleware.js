@@ -4,6 +4,16 @@ import {loginPage} from '../server/login-page.mjs';
 export async function onRequest(context) {
   const {request,env} = context;
   const path = new URL(request.url).pathname;
+  // Install metadata contains no private content and must be available to the OS.
+  if (['/manifest.webmanifest','/sw.js','/assets/app-icon-192.png','/assets/app-icon-512.png'].includes(path)) {
+    const result = await context.next();
+    const publicResponse = new Response(result.body,result);
+    publicResponse.headers.set('Cache-Control','no-cache');
+    publicResponse.headers.set('X-Content-Type-Options','nosniff');
+    if (path === '/manifest.webmanifest') publicResponse.headers.set('Content-Type','application/manifest+json');
+    if (path === '/sw.js') publicResponse.headers.set('Content-Type','application/javascript');
+    return publicResponse;
+  }
   if (path === '/api/login' || path === '/api/logout') return context.next();
   // These handlers validate the same signed/revocable session themselves, returning 503 on D1 failure.
   if (path === '/api/presence' || path === '/api/presence/' || path === '/api/presence/heartbeat' || path === '/api/presence/heartbeat/') return context.next();

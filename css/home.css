@@ -1,5 +1,5 @@
-﻿/* Main dashboard presentation only; catalog and server behavior are unchanged. */
-.portal-home{--home-bg:#070d1c;--home-panel:#101a2d;--home-border:#8ca9dc24;--home-muted:#a2b0cb;--home-radius:18px;color:#eef3ff;background:radial-gradient(ellipse 70% 40% at 15% 0,#6944b51b,transparent 80%),radial-gradient(ellipse 50% 50% at 100% 35%,#125ea016,transparent 80%),var(--home-bg);-webkit-font-smoothing:antialiased}
+/* Main dashboard presentation only; catalog and server behavior are unchanged. */
+.portal-home{--resource-accent:#a3a0ff;--home-bg:#070d1c;--home-panel:#101a2d;--home-border:#8ca9dc24;--home-muted:#a2b0cb;--home-radius:18px;color:#eef3ff;background:radial-gradient(ellipse 70% 40% at 15% 0,#6944b51b,transparent 80%),radial-gradient(ellipse 50% 50% at 100% 35%,#125ea016,transparent 80%),var(--home-bg);-webkit-font-smoothing:antialiased}
 .portal-home .page{width:min(1480px,calc(100% - 56px))}
 .portal-home .header{min-height:92px;padding:20px 0;gap:28px;border-color:var(--home-border)}
 .portal-home .brand{gap:12px;font-size:17px;letter-spacing:.4px;flex-shrink:0}
@@ -284,6 +284,9 @@
   .portal-home .resource-card::after{right:12px;font-size:108px}
 }
 /* Generated illustrations are decorative; text and actions stay above the artwork. */
+.portal-home .resource-card[data-resource-id="crm-systems"]{--card-art:url('../assets/cards/crm.jpg')}
+.portal-home .resource-card[data-resource-id="telephony"]{--card-art:url('../assets/cards/telephony.jpg')}
+.portal-home .resource-card[data-resource-id="scripts"]{--card-art:url('../assets/cards/scripts.jpg')}
 .portal-home .resource-card[data-resource-id="regulations"]{--card-art:url('../assets/cards/regulations.webp')}
 .portal-home .resource-card[data-resource-id="schedule"]{--card-art:url('../assets/cards/schedule.webp')}
 .portal-home .resource-card[data-resource-id="makeup-schedule"]{--card-art:url('../assets/cards/schedule.webp')}

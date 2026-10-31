@@ -1,0 +1,441 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UG Центр скриптів — UG Call Centre</title>
+
+<meta name="theme-color" content="#070d1c"><link rel="icon" href="assets/ug.svg" type="image/svg+xml">
+
+<style>
+:root{color-scheme:dark;--bg:#070d1c;--panel:#101a2d;--text:#eef3ff;--muted:#a2b0cb;--border:#8ca9dc24;font-family:"Bahnschrift","Segoe UI",Arial,sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:radial-gradient(ellipse at 15% 0,#6944b51b,transparent 55%),radial-gradient(ellipse at 100% 35%,#125ea016,transparent 60%),var(--bg);-webkit-font-smoothing:antialiased}button,input{font:inherit}a{color:inherit}.layout{display:grid;grid-template-columns:280px minmax(0,1fr);width:min(1480px,calc(100% - 56px));margin:auto;gap:32px;min-height:100vh}.sidebar{position:sticky;top:0;height:100dvh;overflow-y:auto;padding:28px 18px 28px 0;border-right:1px solid var(--border);scrollbar-width:thin;scrollbar-color:#65548e transparent}.logo{display:flex;align-items:center;gap:12px;margin:0 0 28px;padding-bottom:24px;border-bottom:1px solid var(--border)}.logo img{width:42px;height:42px;border-radius:12px;object-fit:contain;box-shadow:0 0 24px #9f6aff19}.logo::after{content:"UG CALL CENTRE";font-size:15px;font-weight:600;letter-spacing:.4px}.logo-glow{display:none}.tree-item{display:block;min-height:44px;padding:13px 12px;margin-bottom:7px;border:1px solid transparent;border-radius:10px;color:#acbbd5;font-size:12px;font-weight:500;line-height:1.65;text-decoration:none;transition:background .18s,border-color .18s}.tree-item:hover{color:#e0d1ff;background:#8b5cf619;border-color:#a68ad645}.content{min-width:0;padding:28px 0}.hero{padding:32px;border:1px solid #888fe33a;border-radius:24px;background:radial-gradient(ellipse at 90% 20%,#4563c429,transparent 60%),linear-gradient(115deg,#35225144,#12203a80 65%,#102039)}.hero::before{content:"UG / РОБОЧІ МАТЕРІАЛИ";display:block;margin-bottom:16px;color:#c5b4fb;font-size:10px;letter-spacing:2px}.hero h1{margin:0;font-size:clamp(30px,3.4vw,48px);font-weight:650;line-height:1.15;letter-spacing:-1.3px}.hero h1 span{background:linear-gradient(100deg,#bc9bff,#64d4ff);background-clip:text;color:transparent}.hero p{max-width:700px;margin:18px 0 0;color:#acbdd8;font-size:14px;line-height:1.8}.search{display:flex;gap:12px;margin-top:24px;padding:6px 8px 6px 16px;border:1px solid #8c82c245;border-radius:11px;background:#0b1226}.search:focus-within{border-color:#b096ff;box-shadow:0 0 0 3px #8b5cf614}.search input{min-width:0;flex:1;padding:10px 0;border:0;outline:none;background:transparent;color:var(--text);font-size:13px}.search input::placeholder{color:var(--muted)}.search button{min-height:44px;padding:10px 14px;border:1px solid #9c80dd55;border-radius:8px;background:#8b5cf620;color:#d2c0fa;font-size:12px;cursor:pointer}.search button:hover{background:#8b5cf640}.section{margin-top:32px;scroll-margin-top:24px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.section-head h2{margin:0;font-size:20px;line-height:1.5;font-weight:600;letter-spacing:-.3px;overflow-wrap:anywhere}.badge{flex-shrink:0;padding:6px 10px;border:1px solid #a27bed36;border-radius:8px;background:#a27bed13;color:#bca5ff;font-size:10px}.article-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.article{position:relative;display:block;min-width:0;padding:23px;border:1px solid color-mix(in srgb,var(--accent,#a58af8) 26%,transparent);border-radius:18px;background:linear-gradient(140deg,color-mix(in srgb,var(--accent,#8b5cf6) 7%,transparent),transparent 65%),var(--panel);text-decoration:none;transition:transform .2s,border-color .2s,box-shadow .2s}.article::before{content:"↗";display:grid;place-items:center;width:34px;height:34px;margin-bottom:16px;border:1px solid color-mix(in srgb,var(--accent,#a58af8) 30%,transparent);border-radius:10px;background:color-mix(in srgb,var(--accent,#8b5cf6) 12%,transparent);color:color-mix(in srgb,var(--accent,#a58af8) 75%,white);font-size:20px}.article:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent,#a58af8) 65%,transparent);box-shadow:0 8px 28px #03071355}.article h3{margin:0 0 12px;font-size:15px;line-height:1.6;font-weight:600;overflow-wrap:anywhere}.article p{margin:0;color:var(--muted);font-size:12px;line-height:1.8}.footer{margin-top:36px;padding:22px 0 0;border-top:1px solid var(--border);color:#7d89a7;font-size:10px;letter-spacing:1px}.audio-card::before{content:"♫"}.audio-card audio{display:block;width:100%;margin-top:18px;height:40px}.search-results{display:grid;gap:10px;margin-top:16px;max-height:400px;overflow-y:auto}.search-result-item{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 16px;border:1px solid #a99be338;border-radius:10px;background:#101a2d;color:#e0d8f5;text-decoration:none;font-size:13px;line-height:1.6}.search-result-item:hover{border-color:#b096ff;background:#19233b}.search-result-item span{color:#bca5ff}.highlight-match{outline:2px solid #b59aff;outline-offset:3px}.no-match{opacity:.35}:focus-visible{outline:2px solid #bba4ff;outline-offset:4px}.business-hedgehog{display:none}
+@media(min-width:1600px){.article-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:1150px){.layout{grid-template-columns:240px minmax(0,1fr);gap:24px}.article-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.badge{display:none}}@media(max-width:800px){.layout{width:calc(100% - 32px);grid-template-columns:minmax(0,1fr);gap:0}.sidebar{position:relative;height:auto;padding:20px 0 14px;border-right:0;border-bottom:1px solid var(--border);display:flex;gap:8px;overflow-x:auto;align-items:center}.logo{flex-shrink:0;margin:0 12px 0 0;padding:0;border:0}.logo::after{display:none}.tree-item{flex:0 0 190px;margin:0;padding:10px;font-size:11px;border-color:var(--border);background:#101a2d}.content{padding-top:20px}.hero{padding:24px}.section-head h2{font-size:18px}}@media(max-width:520px){.article-grid{grid-template-columns:minmax(0,1fr);gap:12px}.hero{padding:22px 18px;border-radius:18px}.hero h1{font-size:30px}.hero p{font-size:13px}.search{gap:6px;padding-left:10px}.search input{font-size:12px}.search button{padding:10px}.section{margin-top:26px}.article{padding:20px}.article:hover{transform:none}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Single list of script titles. */
+.layout{display:block;width:min(1100px,calc(100% - 56px))}.scripts-brand{display:flex;align-items:center;gap:12px;min-height:92px;border-bottom:1px solid var(--border);font-size:17px;font-weight:600;letter-spacing:.4px}.scripts-brand img{border-radius:12px}.scripts-catalog .article-grid{grid-template-columns:minmax(0,1fr);gap:0;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--panel)}.scripts-catalog .article{display:flex!important;align-items:center;gap:16px;padding:16px 20px;border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;box-shadow:none;transform:none}.scripts-catalog .article:last-child{border-bottom:0}.scripts-catalog .article::before{display:none}.scripts-catalog .article::after{content:'↗';margin-left:auto;flex-shrink:0;color:#bca5ff;font-size:20px}.scripts-catalog .article h3{margin:0;font-size:15px;line-height:1.6;font-weight:500}.scripts-catalog .article:hover{background:#8b5cf614;transform:none;box-shadow:none}.scripts-catalog .article:focus-visible,.scripts-catalog .highlight-match{outline-offset:-3px}.scripts-catalog .badge{display:block;white-space:nowrap}@media(max-width:600px){.layout{width:calc(100% - 32px)}.scripts-brand{min-height:76px;font-size:15px}.scripts-catalog .article{padding:15px}.scripts-catalog .article h3{font-size:14px}}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<header class="scripts-brand"><img src="assets/ug.svg" width="42" height="42" alt="UG"><span>UG CALL CENTRE</span></header>
+
+<main class="content">
+
+<header class="hero">
+
+<h1>Центр <span>скриптів</span></h1>
+
+<p>Скрипти для розмов в одному списку. Знайдіть потрібний за назвою.</p>
+
+<div class="search">
+<input type="search" aria-label="Пошук скриптів" id="searchInput" placeholder="Пошук скриптів...">
+<button id="clearSearch">Очистити</button>
+</div>
+
+<div id="searchResults" class="search-results" style="display:none;"></div>
+
+</header>
+
+
+    <section class="section scripts-catalog" aria-label="Список скриптів"><div class="section-head"><h2>Скрипти</h2><span class="badge">106 скриптів</span></div><div class="article-grid"><a href="https://docs.google.com/spreadsheets/d/1aODcpgbzhPJRhkE6rSV7rwrK97NBABjJsbNOzsoNfgY/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>📊 Товари на КРОС</h3>
+        </a>
+<a href="https://docs.google.com/document/d/108Ke1W_Y7qHPPPdJr8ZjOnTbA-ycfiM59lmHmIe-QhM/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧼 Настінний кондиціонер </h3>
+        </a>
+<a href="https://docs.google.com/document/d/1V8AcB2KNdj6WclCGXE7wrqZoJi1ihlD1xiNBytSkqeg/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧼 Афганський казан  8 л </h3>
+        </a>
+<a href="https://docs.google.com/document/d/1nzT7DRbTGXVz-JP__432fujvu5BJHp26zO6xHLO2YH4/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧼 Монокуляр </h3>
+        </a>
+<a href="https://docs.google.com/document/d/1e_xezY0oSEFq2p4QvRIiOYE2Wznr4kFN9K_b9lwrGmc/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧼 Крісло надувне</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1hHWeKExX7KQrtJ-kpBLW5NQE-hsjxD40GIseD8A6QS8/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Бінокль</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1G7Ci7lBmQnTLtfk5Lt9nV4VFKwaZTBJCvwzGLEsmdg0/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Система відеоспостереження</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1OQFiodCKRPQkfgUIDmAgSHtmTPngniGgoVRE6EDPdyc/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Машинка літак 2в1</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1a0_1UStaZcJ4ilB2UZWlCimUiDOhKBFRsIEZQgI7yoM/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Колонка Bluetooth TTD 2806 з мікрофоном</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1MxMyXcu__ZYNRQ3WT7FGESdTkzlj_-ee_d8Bp4dvX9A/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Колонка акустична ZXX-5504 2*6.5</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1whPVMgVbGhwDSd43xj6hoEw_bkOXPIVQwdjKXL3Xy-Q/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Дошка для віджимання електрична</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1r0C6d9xYbJg2XJEW6DjUDW4anpqG1YemNCl0_t76VHk/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Полірувальна машина</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1PtE-uLywmYcdqEuWxCWiKrmyPHJZbk5chVH8JEurlX8/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Компресор великий у кейсі DeWalt</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1GCCGCiSb3cIs2P8RNG7iZmrXTo--uHdarLWm_KYeV_k/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Камера подвійна з сонячною панеллю Wi-Fi</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1UXLqFDbk-xlZLDMyxlzH1ZJNjB491aNeQ9aApTNPI5A/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡  Компресор АКБ з цифровим екраном + пилосос</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1FZ4xow_I7RM9xcCeUTLLrsLlJSdbRO7r1pEYBXf10n8/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🌿 Набір 4 в 1 тример пила сікатор дуйка Makita</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1lmX-WRT8TbEO2TpsXbcCFZ9aaa1LOZejzjJcScuQpB4/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧼 Пароочисник CLEANER</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1fWFx5BzXJ_T1vtyBdUBWlOt4o7JI3qyFZUZ724A2HsQ/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🎣 Кастінгова сітка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/169aUIxo8t61q-eyzBimZQpW4E32vqFEozBri3w-0heA/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔧 НАБІР КЛЮЧІВ MEISTER TOOLS MS-650 108 ЕЛ</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1eEDuHWHbuZjWpsRCKx1-w_S00HbE8qChsJhWk1IcWkw/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🚗 Електромобіль дитячий</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1lGAaaNVSRrf2Flq4WdraA7bpPa1n8BghazSuAe7MLNs/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🎨 Фарбопульт</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1KNylEPq69t2mZDl2Nu_6RjWkGieJEYRSIKAjAhiploQ/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🚤 Човен надувний</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1TP3dtgeWfepc4JMZTxjCfkam-TxF9_R6f7sezbHYb6Y/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🌱 Акумуляторний культиватор</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1AA5kMEIaygrhyRjX4dee0r2lLADd-r7uFiF3EtuyNo8/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>⚡ Зварювальний апарат</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1tF0IFOU4o7RMgcAVZCZ8WMG0jRvijmGgK5xd26FrZAk/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🚁 Квадрокоптер</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1LMGSuC7aeRHOXf7ulMjKsyq1JTpP6hogc8gICDcOiWY/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🕶 Розумні окуляри з камерою</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1whTwBpzNHRDnfIU72xYpw18RdWw8W4QjfITF8UlAyqM/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🪚 Пила з сікатором та висоторізом в наборі Makita</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1pUBQrayn9C2qV1ysosIJyBwETT-zWDaUFg6U3OQJqdI/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🍳 Духовка електрична 3 в 1 RAF</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1gZoj4uamVb0e5jl7zSNFDt8IORrIoDhozEd9tI4lcNg/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔩 Шуруповерт Макіта</h3>
+        </a>
+<a href="https://docs.google.com/document/d/115b46WM0b5mSNBBUtjRbj_O_PMOX0cCV4KXvk4GSGN0/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔋 Пускозарядний (бустер)</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1iRoodBYBaoUD9QCRtltouqm3bUDo7dEO0r8gmjdAKOY/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>👕 Жіноча термобілизна</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1Ki9fNUk1Eg2cWDZvmo26o7gG6-XXGVFEv0QMhxVbW6Q/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧴 Шапунь проти сивини</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1viTXtmJZHRw2WRo6NM84Pxc-CYxti0__eRiUFHO5oLY/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔋 Інвертори (універсальний)</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1XBvHE-MszG7lzAlYd4w0MO21bZHIcb-hSQxMouJElDQ/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔌 UPS (безперебійник)</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1WDYD6v-xeuxlvNFJqr1C31nHvqg56k_H7EmTcyp-qZo/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🚗 Тент на авто</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1E_mT03cqsalFIYuGw0cQdYc7d4wA7de-cCfnrzn1ibU/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🪚 Bosch ланцюгова пила</h3>
+        </a>
+<a href="https://docs.google.com/document/d/18HckT_R4Jj2SD0-KSbYU5WuIxsUAv6SQpIUug4y3pcw/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔋 Інвертор 3500W</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1MtQ46lYbFfiy2BxdaFdHIG6ecYj_oykB8lKP9mKnrd0/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔋 Інвертор 5000W</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1HeFHQBvaO2j3dGESNoqTw_4iVWuw5wO4Mrjv9of981s/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>☕ Термос-чайник</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1wjFvV9Y3Tnl2J2sN6iFr6PuuavS93-DhedEco7JK93I/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>📽 Проектор</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1EghuXApDAMQbI43BvXQyCt3hn0TMJ_jjeFJUr_Q3VQ4/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔧 Інструменти DeWalt</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1F-v_VFm94gChYO4fgpAJ8nBwMfiIeUsW1pmdsb6DBJY/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🏋️ Віброплатформа</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1nvfm8C9CI-QLb7qOjIOgVyOaTyJh4kZS2JpU9u_L09g/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🥊 Тренажер для боксу</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1un_9nM5Vf2bLheaG5F7A_j1dbB7iVJZBRJ4r7DZjjn8/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🎁 LOST BOX</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1FIbDdCjbF4zTX1BFbjjfsfHqsrCQoennxRoNkwWPF0M/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🪜 Телескопічна драбина</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1LqKpZE-aKuIgfsKkEhUv0D_gteNsdGH-wkQ_f8Tw-oY/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🧳 Косметичка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1BBD7QjFDWyNniH2C84vCBmTQ_zeNJ7ikkhYOibvI83k/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🔧 Гайковерт Макіта</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1qk_fPFxl74J_5gS1u30s-5Bfgg2AYd9Bvo0_-rBw9-E/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🎁 Подарунковий набір 7в1</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1dzADKI_BWDixa7DZ1xBQzwtfT2oqrCIe08HaAY4H0wc/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🪚 Акумуляторна пила</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1LVBpc5RKsLbvPGn9LRmLS2Y3-RRjvZe0HiB4_X0Yo9o/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🍽 Посуд 12в1</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1iztpCF9f5nJrugvzJYfQ1yXFllg_0dI_Vz_2bvzCJ8c/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>💨 Фен Supersonic</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1viT871Gh546Ru-seA3XUBw_Mp-jWTupdDJX-VyM3XBU/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🪟 Термоштора</h3>
+        </a>
+<a href="https://docs.google.com/document/d/15fXK7ROknP1mu2qvfcnkJNfRFp86N9N9t01mnnUoEd8/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🪚 НАБІР 2в1 СЕКАТОР + ПИЛКА</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1A1onbNTBN766AxNkKTcaAPiYlZL6qt7FHvu9dmmGHGc/edit?usp=sharing" class="article" style="--accent:#22c55e" target="_blank">
+            <h3>🚗 Накидка на лобове</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1JoieTRP9_A00XjG7aRWcv9jM1XnSFGUADD-j7SGuaHk/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>📢 Тимчасові короткі скрипти</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1XsP2i0LfVA97-QG5_lnrgHMWpaEsrzUYYkkkr_NpZ9U/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱Крапельна стрічка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1dPZfoZyPS97jjJkBZ79T0K3n4YBZgalLdBhl8nk8Is0/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>⚡Колонка + Флешка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/19HJoHhLaWfQxZtAz2-Ya4PacIfodBdwk9F8oUOdinPA/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>⚡Садові світильники</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1Zc1mAY3M8Xc8W1T1Z-KTuvHU_7Qc8iRhVMhpG2uxY4o/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱 активатор грунту</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1OB3Yp5_b0tZ8_cwiTk3plvoQFNSKjAMQHDIcRGi4Sow/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱 Металева ваза</h3>
+        </a>
+<a href="https://docs.google.com/document/d/19HhAeht6xJrORijhxTpxzIUlgddhk6-_9KQrj_01f04/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱 Арка-пергола</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1BN-lZOrSE9XG8b3MkwT_wRjJsxyVac9QguBmDycEABI/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱 Конюшина</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1s8iQqmQjrmof2chkeR9oMQCbi8FWDpUDBE3iBh5-ZQE/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱 Мікробек/Септик</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1YKsrQVKYXLuwVfg1x1Yw_B7MX2lucrG9KpQcfVfnfzA/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🧱 Паркан конструктор</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1drqXpcdGja8PMaid0trUZpTuXrbkm5lZGVPuyA4S9Po/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🧱 Бордюр смужка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1mtsPjyvW2OkxdmQF_D7TyrQ_GC6LYlksokShlE7OZFc/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🌱 Торф’яні таблетки для розсади</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1IqLZj1hL61po9KyJ3Dr1GVbQ7lgnD1ib5LqkFful_0s/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🚗 CarPlay</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1HzHg0gxih83Y4t6eePV11IsN1CWqaMVuoynUP5mACAY/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>💿 CD диск з музикою</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1gdZouQ84cFvwnie4SFNFpuC5YzfJK3zsRVbYzNfqwcU/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>📚 Забута книга</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1NRFC8APdQuDnbEufy45cmL53RIag_KkFnXA-OtnrTkY/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🐔 Пробіотик для птиці</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1vIEM6O89PuhCZMVFWTCvToPNndsBmnk1QKDHK0GOauA/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🎄 Символ Різдва</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1rSmdyZcvtm_MmWMF7wRQn0WpALuT6w6CP2mDiTTFxLM/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>💾 Флешка з піснями</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1kyr8yKmOKpKg4z-7MoYNG_jTtqoj2PsQLgkYyRH_vp0/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🕯 Лампадка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1RMX39Wd8IsH9M368jXS7qfHPENoUepMeDOQZibTpqvk/edit?usp=sharing" class="article" style="--accent:#f59e0b" target="_blank">
+            <h3>🏡 Теплиця</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1qXfjoSNYYVEGtqsMqUt20sey6oePxwb1f3tJZJ3d9YQ/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔌 Безперебійник UPS</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1zzeKJ-cOmvW-hvV4M-WSbW-fK-iXs_jjeeK2v4sL3x8/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔋 Інвертор (загальний)</h3>
+        </a>
+<a href="https://docs.google.com/document/d/18jf1Ymwmf2yJphHpJS1xNVxz1bHMsNYpotgVrjDX-MY/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🪚 Акумуляторна ланцюгова пила DOMOTEC</h3>
+        </a>
+<a href="https://docs.google.com/document/d/16urW1J-15diGga-pM8P91Xs1bXaWuRWGyki98VWplUA/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>☀️ Сонячна станція</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1AsGhRbw00eQ3w10UO-IWbFe_7hy8xISiVNDrtYu-nEw/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🍗 Айрогриль</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1PtE-uLywmYcdqEuWxCWiKrmyPHJZbk5chVH8JEurlX8/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🚗 Авто компресор</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1bz1ul0EC1FEo2m4HqUBBtuWtytTFliV5g7pSm2Yp9-U/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>📐 Лазерний нівелір (рівень)</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1riDsx9J5bqblYcgN5A3jq-CY8RnHMTCx-Sii6uBe9Xw/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔦 Фонарь</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1OE3UBU095cF2TZu4Wzm0vyrPm3JJuhsPu_VUfCD10ZM/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🌿 Секатор акумуляторний</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1ndBpEG_XMBOH1-rJiw85tJtrIuHsM0eIIvG6CrRL_bA/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔋 Павербанк</h3>
+        </a>
+<a href="https://docs.google.com/document/d/12Yg4sRlUW2N_zReKdYXZMJ5sgvyNypPogn_f3J_yPQQ/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>📱 Дитячий телефон</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1sM1biJZgfVJq3NHEzqWKW3VjVU5IhXymcNlQIA7Yloo/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🪚 Акумуляторна пила Gold-TOR 12d</h3>
+        </a>
+<a href="https://docs.google.com/document/d/19n7Uz20rlBSBM1JbrjKvbeSotg1I1cMVBTD_H37ycdI/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔥 Газовий обігрівач-плита 2в1 APG Appliance</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1x2QGbVnevAHd2odoQwpE8b1Nw_XOE03ut9ttLSwO0Ow/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🪜 Телескопічна драбина</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1GMANFeAkpD61y2FUB-sjv3SaYwrSkYt8HJ_vomYKFKo/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🌿 Газонокосилка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1xjqie-l70bkz-fBLmbIkw-C2gaGE-vBb-p4Z1gCTjRM/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🪚 НАБІР 2в1 СЕКАТОР + ПИЛКА</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1ZrapYg8_OKrk1LTnMZ2wAAPKykz20uY_xL1HLNGAJ74/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>💧 Вологопоглинач</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1lW2IjXHvCRKuQOAqGfylby8yWfTHAFIfx4esPnE33oc/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔥 Буржуйка (50/25/41)</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1t4-PFv9ENRXV8lJo3vzz0QhPSKWYD-LpPplif220KgQ/edit?usp=sharing" class="article" style="--accent:#06b6d4" target="_blank">
+            <h3>🔋 Пускозарядний пристрій</h3>
+        </a>
+<a href="https://docs.google.com/document/d/15omNMsRbBFTxxy1Q2KLde3cmKpvJja8Eju9rucEZv70/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🧹 Пилосос</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1TUmlHJB70khqoPzmStQFtozQgVXPv1U3LZNxWswEBd4/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🌿 Садова гойдалка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1Dg6tW1Dx9LyLyvvo5bpddmrkbNcniqgMfo2rYBnQvwk/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🤸 Батут</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1MzF38xf8UKwG5j-K12ouNU51QY5XJ4TkAgrKBthGWPI/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🪑 Офісне крісло</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1RMX39Wd8IsH9M368jXS7qfHPENoUepMeDOQZibTpqvk/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🌱 Теплиця</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1HnKV-OEPLvnLnlIU_bmJU9bqABSrMjhMAisETCFHmiA/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🔥 Газовий обігрівач</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1_7CrO1KIXwRsBHHeakwfwFpCyHZheMGnkVTnl1dif0w/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🛏️ Розкладушка 3в1</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1pAQYIMbaqWAi97u3aOwqtgnPys8XULIZcjZvJ2NwOz8/edit?usp=sharing" class="article" style="--accent:#ec4899" target="_blank">
+            <h3>🔥 Масляний обігрівач</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1cXHOprBX6HJ8v1SYCuZUzjXgSkCjvU2RlffdgOr6Eys/edit?usp=sharing" class="article" style="--accent:#38bdf8" target="_blank">
+            <h3>🌿 Культиватор 6в1</h3>
+        </a>
+<a href="https://docs.google.com/document/d/16DFZVXC81Rn2R9_jeLPKaknc0eff_XI2EiGOdRJYXlo/edit?usp=sharing" class="article" style="--accent:#38bdf8" target="_blank">
+            <h3>🔋 Гелевий акумулятор 12V 100Ah</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1-rvSO54zUvC3XXYA3A5o0J4nyKedXejlG6_2V8aV4mw/edit?usp=sharing" class="article" style="--accent:#38bdf8" target="_blank">
+            <h3>🛏️ Ортопедична подушка</h3>
+        </a>
+<a href="https://docs.google.com/document/d/17OGYV4mRymZ45Y4XmiC5glO-lQv0PyKHhcSwAWvxYgg/edit?usp=sharing" class="article" style="--accent:#38bdf8" target="_blank">
+            <h3>🍇 Прес для винограду Вілен 15/10 л</h3>
+        </a>
+<a href="https://docs.google.com/document/d/1G6BSlpgavqcX8ABc-Gf3keYbzm3A8rXT50OVqPDo144/edit?usp=sharing" class="article" style="--accent:#38bdf8" target="_blank">
+            <h3>🔥 Портативний обігрівач 2в1</h3>
+        </a></div></section>
+
+<div class="footer">
+UG CALL CENTRE • KNOWLEDGE TREE • 2026
+</div>
+
+</main>
+
+</div>
+
+<script>
+const input = document.getElementById('searchInput');
+const clearBtn = document.getElementById('clearSearch');
+
+const resultsBox = document.getElementById('searchResults');
+
+function applyFilter(){
+ const q = input.value.toLowerCase().trim();
+
+ resultsBox.innerHTML='';
+
+ document.querySelectorAll('.article').forEach(card=>{
+
+   card.classList.remove('highlight-match');
+   card.classList.remove('no-match');
+
+   if(q === ''){
+     card.style.display='block';
+     resultsBox.style.display='none';
+     return;
+   }
+
+   const text = card.textContent.toLowerCase();
+   const ok = text.includes(q);
+
+   card.style.display='block';
+
+   if(ok){
+
+      card.classList.add('highlight-match');
+
+      const title = card.querySelector('h3')?.innerText || 'Результат';
+      const href = card.getAttribute('href');
+
+      const result = document.createElement('a');
+      result.href = href;
+      result.target = '_blank';
+      result.rel = 'noopener noreferrer';
+      result.className = 'search-result-item';
+      result.innerHTML = `
+        <div>${title}</div>
+        <span>→</span>
+      `;
+
+      resultsBox.appendChild(result);
+
+   }else{
+
+      card.classList.add('no-match');
+
+   }
+ });
+
+ resultsBox.style.display =
+   resultsBox.children.length ? 'grid' : 'none';
+}
+
+input.addEventListener('input', applyFilter);
+
+clearBtn.addEventListener('click', ()=>{
+ input.value='';
+ applyFilter();
+});
+</script>
+
+
+<div class="business-hedgehog">
+  🦔💼
+</div>
+
+</body>
+</html>

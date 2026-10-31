@@ -96,3 +96,7 @@
 @media (prefers-reduced-motion: reduce) {
   .portal-dialog .modal-resource-card, .portal-dialog #close-dialog { transition: none; }
 }
+
+/* Integrated script library inside the portal dialog. */
+.portal-dialog[data-category="scripts"] #dialog-documents{display:block}
+.scripts-search{margin-bottom:16px}.scripts-search>label{display:block;color:#b1c2dc;font-size:13px;margin-bottom:9px}.scripts-count{color:#a2b0cb;font-size:12px;line-height:1.6;margin:12px 0}.scripts-list{border:1px solid #8ca9dc24;border-radius:14px;overflow:hidden;background:#101a2d}.script-link{display:flex;align-items:center;gap:16px;min-height:54px;padding:16px 20px;border-bottom:1px solid #8ca9dc24;color:#eef3ff;text-decoration:none;font-size:15px;line-height:1.6;overflow-wrap:anywhere}.script-link:last-child{border-bottom:0}.script-link::after{content:'↗';margin-left:auto;flex-shrink:0;color:#bca5ff;font-size:20px}.script-link:hover{background:#8b5cf619}.script-link:focus-visible{outline-offset:-3px}.scripts-list>.empty-documents{margin:14px;border:0}@media(max-width:600px){.script-link{padding:14px;font-size:14px}}

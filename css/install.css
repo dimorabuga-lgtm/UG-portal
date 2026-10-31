@@ -1,0 +1,6 @@
+.install-panel{display:flex;align-items:center;gap:12px;margin:16px 0;padding:16px;border:1px solid #b096ff55;border-radius:14px;background:linear-gradient(135deg,#241b3b,#101a2d);color:#eef3ff}
+.install-panel>div{flex:1;min-width:0}.install-panel strong{font-size:14px}.install-panel p{margin:7px 0 0;font-size:12px;line-height:1.7;color:#b9c6dd;overflow-wrap:anywhere}
+.install-panel button{min-height:44px;padding:10px 14px;border:1px solid #c1a2ff66;border-radius:10px;background:#7350b94d;color:#f0e8ff;cursor:pointer}
+.install-panel .install-dismiss{flex-shrink:0;padding:8px 12px;font-size:22px;background:transparent}.install-panel [hidden]{display:none}.install-panel button:disabled{opacity:.6}
+@media(max-width:600px){.install-panel{flex-wrap:wrap;align-items:flex-start}.install-panel>div{flex-basis:calc(100% - 56px)}.install-panel .install-action{order:3;width:100%}.install-panel .install-dismiss{order:2}}
+@media(display-mode:standalone){.install-panel{display:none}}

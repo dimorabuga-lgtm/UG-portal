@@ -154,8 +154,40 @@ function renderDocuments(container, documents, modalView = false, append = false
 let modalTrigger = null;
 let savedScroll = 0;
 let closeTimer;
+function renderScriptLibrary(container, focusId) {
+  dialog.dataset.layout = 'scripts';
+  const controls = element('div', 'scripts-search');
+  const label = element('label', '', 'Пошук скриптів');
+  label.htmlFor = 'scripts-search';
+  const field = element('div', 'search-field');
+  const input = element('input');
+  input.id = 'scripts-search'; input.type = 'search'; input.placeholder = 'Введіть назву скрипту…'; input.autocomplete = 'off';
+  const clearButton = element('button', '', 'Очистити'); clearButton.type = 'button'; clearButton.hidden = true;
+  const count = element('p', 'scripts-count'); count.setAttribute('role', 'status'); count.setAttribute('aria-live', 'polite');
+  const list = element('div', 'scripts-list');
+  const documents = resources.filter(resource => resource.category === 'scripts');
+  function update() {
+    const words = normalize(input.value).split(/\s+/).filter(Boolean);
+    const matches = documents.filter(resource => words.every(word => normalize(resource.title).includes(word)));
+    list.replaceChildren(); clearButton.hidden = !input.value;
+    count.textContent = words.length ? 'Знайдено: ' + matches.length + ' із ' + documents.length : 'Усього скриптів: ' + documents.length;
+    matches.forEach(resource => {
+      const url = documentState(resource).url; if (!url) return;
+      const link = element('a', 'script-link', resource.title);
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.dataset.documentId = resource.id;
+      link.addEventListener('click', () => remember(resource));
+      link.addEventListener('auxclick', event => { if(event.button === 1) remember(resource); });
+      list.append(link);
+    });
+    if (!matches.length) list.append(element('p', 'empty-documents', 'Скриптів за цим запитом не знайдено. Спробуйте іншу назву.'));
+  }
+  input.addEventListener('input', update);
+  clearButton.addEventListener('click', () => { input.value = ''; update(); input.focus(); });
+  field.append(input, clearButton); controls.append(label, field, count); container.append(controls, list); update();
+}
 function renderSections(category) {
   const container=document.querySelector('#dialog-documents');container.replaceChildren();
+  if(category.category === 'scripts') { renderScriptLibrary(container); return; }
   const assigned=new Set();
   (category.sections || []).forEach(section=>{
     const documents=(section.resourceIds || []).map(id=>resources.find(resource=>resource.id===id)).filter(Boolean);
@@ -224,7 +256,7 @@ function openCategory(category, focusId = null) {
 categories.forEach((category, index) => {
   if (category.hiddenFromGrid) return;
   const card = element('article', 'resource-card'); card.dataset.resourceId = category.id;
-  card.style.setProperty('--accent', category.accent); card.style.setProperty('--glow', category.accent); card.style.setProperty('--delay', `${index * 35}ms`);
+  card.style.setProperty('--accent', 'var(--resource-accent)'); card.style.setProperty('--glow', 'var(--resource-accent)'); card.style.setProperty('--delay', `${index * 35}ms`);
   const icon = element('span', 'card-icon'); icon.setAttribute('aria-hidden', 'true');
   icon.append(svgIcon(({roles:'users',instructions:'book'})[category.category] || category.icon));
   const directResource=resources.find(resource=>resource.id===category.directResourceId);
