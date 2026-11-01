@@ -74,6 +74,18 @@ window.portalCatalog = {
           "resourceIds": [
             "crm-start-traf"
           ]
+        },
+        {
+          "id": "crm-gurt-baza-section",
+          "title": "CRM «Gurt baza»",
+          "description": "Швидкий перехід до CRM «Gurt baza».",
+          "icon": "settings",
+          "accent": "#70d3cf",
+          "type": "site",
+          "status": "available",
+          "resourceIds": [
+            "crm-gurt-baza"
+          ]
         }
       ]
     },
@@ -163,6 +175,19 @@ window.portalCatalog = {
           "status": "available",
           "resourceIds": [
             "regulation-crm-start-traf"
+          ]
+        },
+        {
+          "id": "regulation-crm-gurt-baza-section",
+          "title": "Регламент CRM «Gurt baza»",
+          "description": "Правила та робочі процеси CRM «Gurt baza».",
+          "category": "regulations",
+          "icon": "settings",
+          "accent": "#70d3cf",
+          "type": "docs",
+          "status": "available",
+          "resourceIds": [
+            "regulation-crm-gurt-baza"
           ]
         }
       ]
@@ -1674,6 +1699,15 @@ window.portalCatalog = {
       "status": "available"
     },
     {
+      "id": "script-107",
+      "title": "🩳 Чоловіча білизна CK",
+      "url": "https://docs.google.com/document/d/19duRjEcXZlowue3R-7rErQt3y2uZQ0CTFdfuUne914A/edit?usp=sharing",
+      "category": "scripts",
+      "description": "",
+      "type": "docs",
+      "status": "available"
+    },
+    {
       "id": "ug-telephony",
       "title": "Телефонія",
       "description": "Прослуховування записів розмов у системі телефонії.",
@@ -1689,6 +1723,17 @@ window.portalCatalog = {
       "description": "Правила та робочі процеси СРМ START TRAF.",
       "category": "regulations",
       "url": "https://docs.google.com/document/d/1n_vlY9jnJXp51yX_5z7uBUhtosST59yt_eJlUXeGiBA/edit?tab=t.0",
+      "type": "docs",
+      "status": "available",
+      "modalIcon": "settings",
+      "modalAccent": "#70d3cf"
+    },
+    {
+      "id": "regulation-crm-gurt-baza",
+      "title": "Регламент CRM «Gurt baza»",
+      "description": "Правила та робочі процеси CRM «Gurt baza».",
+      "category": "regulations",
+      "url": "https://docs.google.com/document/d/1-0lfQw1MjyhUGUTcSqsqbTyIua3S2T3k8D9ByTmr5rs/edit?usp=sharing",
       "type": "docs",
       "status": "available",
       "modalIcon": "settings",
@@ -1736,6 +1781,15 @@ window.portalCatalog = {
       "description": "Робоча CRM-система «Старт Траф».",
       "category": "crm",
       "url": "https://icytap.lp-crm.biz/",
+      "type": "site",
+      "status": "available"
+    },
+    {
+      "id": "crm-gurt-baza",
+      "title": "CRM «Gurt baza»",
+      "description": "Робоча CRM-система «Gurt baza».",
+      "category": "crm",
+      "url": "https://gurtbaza.unicrm.pro/",
       "type": "site",
       "status": "available"
     }
